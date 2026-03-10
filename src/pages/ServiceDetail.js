@@ -152,7 +152,7 @@ const ServiceDetail = () => {
 
             {/* Календар */}
             <div className="calendar-section">
-              <h4>{lang === 'UA' ? calendarData.month : 'February 2026'}</h4>
+              <h4>{lang === 'UA' ? calendarData.month.UA : calendarData.month.EN}</h4>
               
               {/* Дні тижня */}
               <div className="calendar-weekdays">

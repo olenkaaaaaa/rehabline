@@ -110,131 +110,6 @@ export const services = [
   }
 ];
 
-// ==================== СПЕЦІАЛІСТИ ====================
-export const specialists = [
-  {
-    id: 1,
-    name: 'Іваненко Марія',
-    specialty: { UA: 'Фізичний терапевт', EN: 'Physical therapist' },
-    experience: 7,
-    description: {
-      UA: 'Працює з болем у спині, посттравматичними станами та відновленням рухливості. Використовує доказові протоколи.',
-      EN: 'Works with back pain, post-traumatic conditions and mobility restoration. Uses evidence-based protocols.'
-    },
-    education: {
-      UA: ['Львівський нац. мед. університет - фізична терапія (2016)'],
-      EN: ['Lviv National Medical University - Physical Therapy (2016)']
-    },
-    certificates: ['Manual Therapy Basics (2021)', 'Evidence-Based Rehab (2023)'],
-    directions: {
-      UA: ['Фізіотерапія', 'ЛФК', 'Посттравма', 'Сколіоз', 'Постопераційне відновлення'],
-      EN: ['Physiotherapy', 'Physical therapy', 'Post-trauma', 'Scoliosis', 'Post-operative recovery']
-    },
-    locationIds: [1],
-    serviceIds: [1, 3, 6],
-    reviews: [
-      {
-        id: 1,
-        clientName: 'Олена С.',
-        date: '2 тижні тому',
-        rating: 5,
-        text: 'Після 4 занять біль значно зменшився. Дуже уважно пояснює вправи.'
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: 'Коваль Андрій',
-    specialty: { UA: 'Ортопед-травматолог', EN: 'Orthopedist-traumatologist' },
-    experience: 10,
-    description: {
-      UA: 'Лікар вищої категорії. Спеціалізується на діагностиці та лікуванні захворювань опорно-рухового апарату.',
-      EN: 'Doctor of the highest category. Specializes in diagnosis and treatment of musculoskeletal diseases.'
-    },
-    education: {
-      UA: ['Національний медичний університет - ортопедія (2013)'],
-      EN: ['National Medical University - Orthopedics (2013)']
-    },
-    certificates: ['Сучасна ортопедія (2020)', 'Травматологія (2022)'],
-    directions: {
-      UA: ['Консультації', 'Діагностика', 'Лікування суглобів'],
-      EN: ['Consultations', 'Diagnostics', 'Joint treatment']
-    },
-    locationIds: [1],
-    serviceIds: [2, 5]
-  },
-  {
-    id: 3,
-    name: 'Соловей Олена',
-    specialty: { UA: 'Масажист', EN: 'Massage therapist' },
-    experience: 5,
-    description: {
-      UA: 'Спеціаліст з лікувального та спортивного масажу. Допомагає зняти м\'язове напруження та прискорити відновлення.',
-      EN: 'Specialist in therapeutic and sports massage. Helps relieve muscle tension and speed up recovery.'
-    },
-    education: {
-      UA: ['Курси масажу (2018)', 'Медичний коледж'],
-      EN: ['Massage courses (2018)', 'Medical College']
-    },
-    certificates: ['Лікувальний масаж (2019)', 'Спортивний масаж (2020)'],
-    directions: {
-      UA: ['Лікувальний масаж', 'Спортивний масаж', 'Розслаблення'],
-      EN: ['Therapeutic massage', 'Sports massage', 'Relaxation']
-    },
-    locationIds: [1, 2],
-    serviceIds: [1, 2, 6]
-  },
-  {
-    id: 4,
-    name: 'Демченко Назар',
-    specialty: { UA: 'Реабілітолог', EN: 'Rehabilitation specialist' },
-    experience: 6,
-    description: {
-      UA: 'Спеціалізується на постопераційному відновленні та реабілітації після травм. Складає індивідуальні програми.',
-      EN: 'Specializes in post-operative recovery and rehabilitation after injuries. Creates individual programs.'
-    },
-    education: {
-      UA: ['Національний університет фізичного виховання - реабілітація (2017)'],
-      EN: ['National University of Physical Education - Rehabilitation (2017)']
-    },
-    certificates: ['Сучасна реабілітація (2021)', 'Неврологічна реабілітація (2022)'],
-    directions: {
-      UA: ['Постопераційне відновлення', 'Реабілітація', 'ЛФК'],
-      EN: ['Post-operative recovery', 'Rehabilitation', 'Physical therapy']
-    },
-    locationIds: [1],
-    serviceIds: [3, 4]
-  }
-];
-
-// ==================== ЛОКАЦІЇ ====================
-export const locations = [
-  {
-    id: 1,
-    name: { UA: 'Ужгород, Центр', EN: 'Uzhhorod, Center' },
-    address: 'пл. Театральна, 3',
-    phone: '+38 (0XX) XXX-XX-XX',
-    email: 'center@rehabline.ua',
-    hours: {
-      UA: 'Пн-Пт 08:00-20:00 • Сб 09:00-15:00',
-      EN: 'Mon-Fri 08:00-20:00 • Sat 09:00-15:00'
-    },
-    coordinates: { lat: 48.6208, lng: 22.2879 }
-  },
-  {
-    id: 2,
-    name: { UA: 'Ужгород, Боздош', EN: 'Uzhhorod, Bozdosh' },
-    address: 'вул. Миру, 18',
-    phone: '+38 (0XX) XXX-XX-XX',
-    email: 'bozdosh@rehabline.ua',
-    hours: {
-      UA: 'Пн-Сб 09:00-19:00',
-      EN: 'Mon-Sat 09:00-19:00'
-    },
-    coordinates: { lat: 48.6312, lng: 22.2681 }
-  }
-];
-
 // ==================== ЗАПИСИ (Appointments) ====================
 export const appointments = [
   {
@@ -454,34 +329,6 @@ export const auditLog = [
   
 ];
 // ==================== КАЛЕНДАР (тестові дані для лютого 2026) ====================
-export const calendarData = {
-  month: 'Лютий 2026',
-  year: 2026,
-  monthIndex: 1, // 0 - січень, 1 - лютий
-  days: [
-    { day: 22, slots: [] },
-    { day: 23, slots: [] },
-    { day: 24, slots: ['09:00', '10:30', '12:15', '16:30', '18:15'] },
-    { day: 25, slots: [] },
-    { day: 26, slots: [] },
-    { day: 27, slots: [] },
-    { day: 28, slots: [] },
-    { day: 15, slots: [] },
-    { day: 16, slots: [] },
-    { day: 17, slots: [] },
-    { day: 18, slots: [] },
-    { day: 19, slots: [] },
-    { day: 20, slots: [] },
-    { day: 21, slots: [] },
-    { day: 8, slots: [] },
-    { day: 9, slots: [] },
-    { day: 10, slots: [] },
-    { day: 11, slots: [] },
-    { day: 12, slots: [] },
-    { day: 13, slots: [] },
-    { day: 14, slots: [] },
-  ]
-};
 
 // ==================== ЧАСОВІ СЛОТИ (загальний список) ====================
 export const timeSlots = [
@@ -539,4 +386,215 @@ export const getServicePopularity = () => {
   });
 
   return popularity;
+};
+// ==================== СПЕЦІАЛІСТИ ===================
+export const specialists = [
+  {
+    id: 1,
+    name: 'Іваненко Марія',
+    photo: '/images/doctors/ivanenko.jpg', // заглушка (потім замінити на реальний шлях)
+    specialty: { UA: 'Фізичний терапевт', EN: 'Physical therapist' },
+    experience: 7,
+    description: {
+      UA: 'Працює з болем у спині, посттравматичними станами та відновленням рухливості. Використовує доказові протоколи, адаптовані під рівень фізичної підготовки клієнта.',
+      EN: 'Works with back pain, post-traumatic conditions and mobility restoration. Uses evidence-based protocols adapted to the client\'s physical fitness level.'
+    },
+    education: {
+      UA: ['Львівський нац. мед. університет - фізична терапія (2016)'],
+      EN: ['Lviv National Medical University - Physical Therapy (2016)']
+    },
+    certificates: ['Manual Therapy Basics (2021)', 'Evidence-Based Rehab (2023)'],
+    directions: {
+      UA: ['Фізіотерапія', 'ЛФК', 'Посттравма', 'Сколіоз', 'Постопераційне відновлення'],
+      EN: ['Physiotherapy', 'Physical therapy', 'Post-trauma', 'Scoliosis', 'Post-operative recovery']
+    },
+    locationIds: [1], // Ужгород, Центр
+    serviceIds: [1, 3, 6], // Фізіотерапія, ЛФК, Електротерапія
+    reviews: [
+      {
+        id: 1,
+        clientName: 'Олена С.',
+        date: '2 тижні тому',
+        rating: 5,
+        text: 'Після 4 занять біль значно зменшився. Дуже уважно пояснює вправи.'
+      },
+      {
+        id: 2,
+        clientName: 'Ігор М.',
+        date: '1 місяць тому',
+        rating: 4,
+        text: 'Професійний підхід, але було кілька запізнень.'
+      }
+    ]
+  },
+  {
+    id: 2,
+    name: 'Коваль Андрій',
+    photo: '/images/doctors/koval.jpg',
+    specialty: { UA: 'Ортопед-травматолог', EN: 'Orthopedist-traumatologist' },
+    experience: 10,
+    description: {
+      UA: 'Лікар вищої категорії. Спеціалізується на діагностиці та лікуванні захворювань опорно-рухового апарату, травмах та їх наслідках.',
+      EN: 'Doctor of the highest category. Specializes in diagnosis and treatment of musculoskeletal diseases, injuries and their consequences.'
+    },
+    education: {
+      UA: ['Національний медичний університет ім. Богомольця - ортопедія (2013)'],
+      EN: ['Bogomolets National Medical University - Orthopedics (2013)']
+    },
+    certificates: ['Сучасна ортопедія (2020)', 'Травматологія (2022)', 'Ендопротезування (2021)'],
+    directions: {
+      UA: ['Консультації', 'Діагностика', 'Лікування суглобів', 'Травми'],
+      EN: ['Consultations', 'Diagnostics', 'Joint treatment', 'Injuries']
+    },
+    locationIds: [1], // Ужгород, Центр
+    serviceIds: [2, 5], // Масаж, Консультація ортопеда
+    reviews: [
+      {
+        id: 3,
+        clientName: 'Петро В.',
+        date: '3 тижні тому',
+        rating: 5,
+        text: 'Дуже уважний лікар, призначив ефективне лікування.'
+      }
+    ]
+  },
+  {
+    id: 3,
+    name: 'Соловей Олена',
+    photo: '/images/doctors/solovey.jpg',
+    specialty: { UA: 'Масажист', EN: 'Massage therapist' },
+    experience: 5,
+    description: {
+      UA: 'Спеціаліст з лікувального та спортивного масажу. Допомагає зняти м\'язове напруження, прискорити відновлення після тренувань та травм.',
+      EN: 'Specialist in therapeutic and sports massage. Helps relieve muscle tension, speed up recovery after workouts and injuries.'
+    },
+    education: {
+      UA: ['Курси масажу (2018)', 'Медичний коледж "Монада" (2015-2018)'],
+      EN: ['Massage courses (2018)', 'Monada Medical College (2015-2018)']
+    },
+    certificates: ['Лікувальний масаж (2019)', 'Спортивний масаж (2020)', 'М\'якотканинні техніки (2022)'],
+    directions: {
+      UA: ['Лікувальний масаж', 'Спортивний масаж', 'Розслаблення', 'Антицелюлітний'],
+      EN: ['Therapeutic massage', 'Sports massage', 'Relaxation', 'Anti-cellulite']
+    },
+    locationIds: [1, 2], // Працює в Центрі та Боздоші
+    serviceIds: [1, 2, 6], // Фізіотерапія, Масаж, Електротерапія
+    reviews: [
+      {
+        id: 4,
+        clientName: 'Наталія К.',
+        date: '1 тиждень тому',
+        rating: 5,
+        text: 'Чудовий масаж, після сеансу легкість у всьому тілі!'
+      },
+      {
+        id: 5,
+        clientName: 'Андрій С.',
+        date: '2 тижні тому',
+        rating: 5,
+        text: 'Професіонал своєї справи. Допоміг з болем у спині після 3 сеансів.'
+      }
+    ]
+  },
+  {
+    id: 4,
+    name: 'Демченко Назар',
+    photo: '/images/doctors/demchenko.jpg',
+    specialty: { UA: 'Реабілітолог', EN: 'Rehabilitation specialist' },
+    experience: 6,
+    description: {
+      UA: 'Спеціалізується на постопераційному відновленні та реабілітації після травм. Складає індивідуальні програми з урахуванням цілей пацієнта.',
+      EN: 'Specializes in post-operative recovery and rehabilitation after injuries. Creates individual programs considering patient\'s goals.'
+    },
+    education: {
+      UA: ['Національний університет фізичного виховання і спорту України - фізична реабілітація (2017)'],
+      EN: ['National University of Physical Education and Sport of Ukraine - Physical Rehabilitation (2017)']
+    },
+    certificates: ['Сучасна реабілітація (2021)', 'Неврологічна реабілітація (2022)', 'Кінезіотейпування (2023)'],
+    directions: {
+      UA: ['Постопераційне відновлення', 'Реабілітація', 'ЛФК', 'Неврологічна реабілітація'],
+      EN: ['Post-operative recovery', 'Rehabilitation', 'Physical therapy', 'Neurological rehabilitation']
+    },
+    locationIds: [1], // Ужгород, Центр
+    serviceIds: [3, 4], // ЛФК, Консультація реабілітолога
+    reviews: [
+      {
+        id: 6,
+        clientName: 'Оксана Л.',
+        date: '3 тижні тому',
+        rating: 5,
+        text: 'Дуже допоміг після операції на коліні. Програма вправ ефективна, стан покращився швидше, ніж очікувала.'
+      }
+    ]
+  }
+];
+// ==================== КАЛЕНДАР ====================
+export const calendarData = {
+  month: { UA: 'Лютий 2026', EN: 'February 2026' },
+  days: [
+    { day: 22, slots: [] },
+    { day: 23, slots: [] },
+    { day: 24, slots: ['09:00', '10:30', '12:15', '16:30', '18:15'] },
+    { day: 25, slots: [] },
+    { day: 26, slots: [] },
+    { day: 27, slots: [] },
+    { day: 28, slots: [] },
+    { day: 15, slots: [] },
+    { day: 16, slots: [] },
+    { day: 17, slots: [] },
+    { day: 18, slots: [] },
+    { day: 19, slots: [] },
+    { day: 20, slots: [] },
+    { day: 21, slots: [] },
+    { day: 8, slots: [] },
+    { day: 9, slots: [] },
+    { day: 10, slots: [] },
+    { day: 11, slots: [] },
+    { day: 12, slots: [] },
+    { day: 13, slots: [] },
+    { day: 14, slots: [] },
+  ]
+};
+
+// ==================== ЛОКАЦІЇ ====================
+
+export const locations = [
+  {
+    id: 1,
+    name: { UA: 'Ужгород, Центр', EN: 'Uzhhorod, Center' },
+    address: 'пл. Театральна, 3',
+    phone: '+38 (099) 123-45-67',
+    email: 'center@rehabline.ua',
+    hours: {
+      UA: 'Пн-Пт 08:00-20:00 • Сб 09:00-15:00',
+      EN: 'Mon-Fri 08:00-20:00 • Sat 09:00-15:00'
+    },
+    coordinates: { lat: 48.6208, lng: 22.2879 } // додайте це
+  },
+  {
+    id: 2,
+    name: { UA: 'Ужгород, Боздош', EN: 'Uzhhorod, Bozdosh' },
+    address: 'вул. Миру, 18',
+    phone: '+38 (099) 234-56-78',
+    email: 'bozdosh@rehabline.ua',
+    hours: {
+      UA: 'Пн-Сб 09:00-19:00',
+      EN: 'Mon-Sat 09:00-19:00'
+    },
+    coordinates: { lat: 48.6312, lng: 22.2681 } // додайте це
+  }
+];
+// ==================== КОНТАКТИ ====================
+export const contactInfo = {
+  hotline: '+38 (0XX) XXX-XX-XX',
+  email: 'support@rehabline.ua',
+  hours: {
+    UA: 'Пн-Пт 08:00-20:00 • Сб 09:00-15:00',
+    EN: 'Mon-Fri 08:00-20:00 • Sat 09:00-15:00'
+  },
+  messengers: {
+    telegram: 'https://t.me/rehabline',
+    viber: 'https://viber.com/rehabline',
+    whatsapp: 'https://wa.me/380XXXXXXXXX'
+  }
 };
