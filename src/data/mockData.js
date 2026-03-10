@@ -451,4 +451,92 @@ export const auditLog = [
     action: 'Змінено тривалість послуги',
     object: 'Фізіотерапія'
   }
+  
 ];
+// ==================== КАЛЕНДАР (тестові дані для лютого 2026) ====================
+export const calendarData = {
+  month: 'Лютий 2026',
+  year: 2026,
+  monthIndex: 1, // 0 - січень, 1 - лютий
+  days: [
+    { day: 22, slots: [] },
+    { day: 23, slots: [] },
+    { day: 24, slots: ['09:00', '10:30', '12:15', '16:30', '18:15'] },
+    { day: 25, slots: [] },
+    { day: 26, slots: [] },
+    { day: 27, slots: [] },
+    { day: 28, slots: [] },
+    { day: 15, slots: [] },
+    { day: 16, slots: [] },
+    { day: 17, slots: [] },
+    { day: 18, slots: [] },
+    { day: 19, slots: [] },
+    { day: 20, slots: [] },
+    { day: 21, slots: [] },
+    { day: 8, slots: [] },
+    { day: 9, slots: [] },
+    { day: 10, slots: [] },
+    { day: 11, slots: [] },
+    { day: 12, slots: [] },
+    { day: 13, slots: [] },
+    { day: 14, slots: [] },
+  ]
+};
+
+// ==================== ЧАСОВІ СЛОТИ (загальний список) ====================
+export const timeSlots = [
+  '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+  '12:00', '12:15', '12:30', '13:00', '13:30', '14:00',
+  '14:30', '15:00', '15:30', '16:00', '16:30', '17:00',
+  '17:30', '18:00', '18:15', '18:30', '19:00'
+];
+
+export const getServicePopularity = () => {
+  // 1. Рахуємо кількість записів на кожну послугу
+  const appointmentCounts = {};
+  appointments.forEach(app => {
+    appointmentCounts[app.serviceId] = (appointmentCounts[app.serviceId] || 0) + 1;
+  });
+
+  // 2. Рахуємо середній рейтинг для кожної послуги через відгуки до спеціалістів
+  // Спочатку зберемо всі відгуки до спеціалістів, які надають певну послугу
+  const serviceRatings = {};
+  const serviceRatingCounts = {};
+
+  reviews.forEach(review => {
+    // Знаходимо спеціаліста
+    const specialist = specialists.find(s => s.id === review.specialistId);
+    if (specialist) {
+      // Знаходимо всі послуги цього спеціаліста
+      specialist.serviceIds.forEach(serviceId => {
+        if (!serviceRatings[serviceId]) {
+          serviceRatings[serviceId] = 0;
+          serviceRatingCounts[serviceId] = 0;
+        }
+        serviceRatings[serviceId] += review.rating;
+        serviceRatingCounts[serviceId] += 1;
+      });
+    }
+  });
+
+  // 3. Обчислюємо фінальний скоринг популярності
+  const popularity = {};
+  
+  services.forEach(service => {
+    const id = service.id;
+    const appointments = appointmentCounts[id] || 0;
+    const avgRating = serviceRatingCounts[id] 
+      ? (serviceRatings[id] / serviceRatingCounts[id]).toFixed(1) 
+      : 0;
+    
+    // Комбінований скоринг: (кількість записів * 10) + (середній рейтинг * 2)
+    // Можна налаштувати ваги під свої потреби
+    popularity[id] = {
+      appointments,
+      avgRating: parseFloat(avgRating),
+      score: appointments * 10 + (parseFloat(avgRating) || 0) * 2
+    };
+  });
+
+  return popularity;
+};

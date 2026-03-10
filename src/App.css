@@ -125,8 +125,12 @@ body {
   margin: 5px 0;
 }
 
-/* ===== Hero Section ===== */
+/* ===== Hero Section (full viewport) ===== */
 .hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: linear-gradient(135deg, var(--bg-light) 0%, #e6f7f7 100%);
   padding: 80px 0;
   text-align: center;
@@ -135,6 +139,7 @@ body {
 .hero-content {
   max-width: 800px;
   margin: 0 auto;
+  padding: 0 20px;
 }
 
 .hero-title {
@@ -174,7 +179,7 @@ body {
 
 /* ===== Features Section ===== */
 .features {
-  padding: 60px 0;
+  padding: 100px 0;
   background-color: white;
 }
 
@@ -225,7 +230,7 @@ body {
 
 /* ===== Nearest Slots Section ===== */
 .nearest-slots {
-  padding: 60px 0;
+  padding: 100px 0;
   background-color: var(--bg-light);
 }
 
@@ -296,7 +301,7 @@ body {
 
 /* ===== Popular Services Section ===== */
 .popular-services {
-  padding: 60px 0;
+  padding: 100px 0;
   background-color: white;
 }
 
@@ -348,6 +353,7 @@ body {
   align-self: flex-start;
 }
 
+/* ===== Buttons ===== */
 .btn-outline {
   background: transparent;
   border: 2px solid var(--primary);
@@ -366,6 +372,42 @@ body {
 .btn-outline:hover {
   background: var(--primary);
   color: white;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+}
+
+.btn-secondary {
+  background-color: var(--bg-light);
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  padding: 8px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 600;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--primary);
+  color: white;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* ===== Сторінка послуг ===== */
@@ -430,11 +472,38 @@ body {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+}
+
+.card-info {
+  flex: 1;
+}
+
+.service-card .service-duration {
+  color: var(--primary);
+  font-weight: 600;
 }
 
 .service-card .category {
-  color: var(--primary);
-  font-weight: 600;
+  color: var(--navy);
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* ===== Пагінація ===== */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  background: white;
+  padding: 15px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+.pagination span {
+  color: var(--text-light);
 }
 
 /* ===== Деталі послуги ===== */
@@ -452,21 +521,6 @@ body {
 .detail-header h1 {
   color: var(--navy);
   font-size: 36px;
-}
-
-.btn-primary {
-  background-color: var(--primary);
-  color: white;
-  border: none;
-  padding: 12px 30px;
-  border-radius: 30px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: var(--transition);
-}
-
-.btn-primary:hover {
-  background-color: var(--primary-dark);
 }
 
 .detail-grid {
@@ -500,6 +554,154 @@ body {
   height: fit-content;
 }
 
+/* Секції опису */
+.description-section,
+.indications-section,
+.preparation-section,
+.contraindications-section,
+.faq-section {
+  margin-bottom: 30px;
+}
+
+.description-section h3,
+.indications-section h3,
+.preparation-section h3,
+.contraindications-section h3,
+.faq-section h3 {
+  color: var(--navy);
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.indications-section ul {
+  list-style: disc;
+  padding-left: 20px;
+  color: var(--text-dark);
+}
+
+.indications-section li {
+  margin-bottom: 5px;
+}
+
+/* FAQ */
+.faq-item {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f8fafc;
+  border-radius: var(--border-radius-sm);
+}
+
+.faq-item h4 {
+  color: var(--primary);
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.faq-item p {
+  color: var(--text-light);
+}
+
+/* Бічна панель */
+.specialist-info,
+.location-info,
+.calendar-section,
+.time-slots {
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.specialist-info h4,
+.location-info h4,
+.calendar-section h4,
+.time-slots h4 {
+  color: var(--navy);
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.specialist-name {
+  font-weight: 600;
+  color: var(--navy);
+  font-size: 16px;
+}
+
+.specialist-specialty {
+  color: var(--primary);
+  font-size: 14px;
+  margin-top: 3px;
+}
+
+.location-address {
+  color: var(--text-light);
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* Календар */
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-light);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--text-dark);
+}
+
+.calendar-day.has-slots {
+  background: white;
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.calendar-day.has-slots:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.calendar-day.selected {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.calendar-day:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  background: #f1f5f9;
+}
+
+/* Секція часу */
+.selected-date {
+  font-size: 14px;
+  color: var(--primary);
+  margin-left: 10px;
+  font-weight: normal;
+}
+
 .slot-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -509,17 +711,33 @@ body {
 
 .slot-btn {
   background: var(--bg-light);
-  border: 1px solid #ddd;
-  padding: 8px;
+  border: 1px solid #e2e8f0;
+  padding: 10px;
   border-radius: var(--border-radius-sm);
   cursor: pointer;
   transition: var(--transition);
+  font-size: 14px;
 }
 
 .slot-btn:hover {
   background: var(--primary);
   color: white;
   border-color: var(--primary);
+}
+
+.no-slots {
+  color: var(--text-light);
+  text-align: center;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: var(--border-radius-sm);
+  font-size: 14px;
+}
+
+.continue-btn {
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
 }
 
 /* ===== Аутентифікація ===== */
@@ -563,55 +781,331 @@ body {
   min-height: 60vh;
 }
 
-/* ===== Адаптивність ===== */
+/* ===== АДАПТИВНІСТЬ (RESPONSIVE) ===== */
+
+/* Великі планшети та маленькі ноутбуки (від 768px до 1024px) */
+@media (max-width: 1024px) {
+  .container {
+    max-width: 960px;
+    padding: 0 15px;
+  }
+
+  .hero-title {
+    font-size: 42px;
+  }
+
+  .features-grid,
+  .services-grid,
+  .slots-grid {
+    gap: 20px;
+  }
+}
+
+/* Планшети (від 576px до 768px) */
 @media (max-width: 768px) {
-  .page-layout {
-    grid-template-columns: 1fr;
+  /* Загальні стилі */
+  .section-title {
+    font-size: 30px;
+    margin-bottom: 30px;
   }
-  
-  .detail-grid {
-    grid-template-columns: 1fr;
-  }
-  
+
+  /* Хедер */
   .header .container {
     flex-direction: column;
     gap: 15px;
+    padding: 15px;
   }
-  
+
+  .nav-menu {
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Головна сторінка */
+  .hero {
+    padding: 60px 0;
+    min-height: auto; /* на планшетах герой не обов'язково на весь екран */
+  }
+
   .hero-title {
-    font-size: 32px;
+    font-size: 36px;
   }
-  
-  .section-title {
+
+  .hero-subtitle {
+    font-size: 16px;
+    padding: 0 15px;
+  }
+
+  .features,
+  .nearest-slots,
+  .popular-services {
+    padding: 60px 0;
+  }
+
+  .features-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .feature-card {
+    padding: 20px;
+  }
+
+  .feature-icon {
+    font-size: 36px;
+  }
+
+  /* Сітки для карток */
+  .slots-grid,
+  .services-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  /* Сторінка послуг */
+  .page-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .filters-sidebar {
+    position: sticky;
+    top: 80px;
+    z-index: 90;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .results-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .service-card.horizontal {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .service-card.horizontal .btn-outline {
+    align-self: stretch;
+    text-align: center;
+  }
+
+  /* Деталі послуги */
+  .detail-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .detail-header h1 {
     font-size: 28px;
   }
-  
+
+  .calendar-grid {
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+
+  .calendar-day {
+    font-size: 12px;
+  }
+
+  .slot-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Дашборди */
+  .dashboard {
+    padding: 20px;
+  }
+}
+
+/* Мобільні телефони (до 576px) */
+@media (max-width: 576px) {
+  /* Загальні */
+  .section-title {
+    font-size: 24px;
+  }
+
+  /* Хедер */
+  .nav-menu {
+    gap: 12px;
+    font-size: 14px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .lang-switcher,
+  .login-btn {
+    padding: 5px 12px;
+    font-size: 14px;
+  }
+
+  /* Головна */
+  .hero-title {
+    font-size: 28px;
+  }
+
+  .hero-subtitle {
+    font-size: 14px;
+  }
+
+  .cta-btn {
+    padding: 12px 25px;
+    font-size: 16px;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
   .slots-grid,
   .services-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .slot-card,
   .service-card {
     width: 100%;
   }
-}
 
-@media (max-width: 480px) {
-  .hero {
-    padding: 40px 0;
+  /* Сторінка послуг */
+  .filters-sidebar {
+    padding: 15px;
   }
-  
-  .hero-title {
-    font-size: 28px;
+
+  .filters-sidebar input,
+  .filters-sidebar select {
+    padding: 8px;
+    font-size: 14px;
   }
-  
-  .cta-btn {
-    padding: 12px 30px;
-    font-size: 16px;
+
+  .results-header span {
+    font-size: 14px;
   }
-  
-  .feature-card {
+
+  /* Деталі послуги */
+  .description {
     padding: 20px;
   }
+
+  .description h3 {
+    font-size: 18px;
+  }
+
+  .faq-item {
+    padding: 12px;
+  }
+
+  .faq-item h4 {
+    font-size: 15px;
+  }
+
+  .booking-sidebar {
+    padding: 15px;
+  }
+
+  .calendar-weekdays {
+    font-size: 12px;
+  }
+
+  .calendar-day {
+    font-size: 12px;
+  }
+
+  .slot-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .slot-btn {
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .continue-btn {
+    padding: 12px;
+  }
+
+  /* Аутентифікація */
+  .auth-container {
+    margin: 30px 15px;
+    padding: 25px;
+  }
+
+  .auth-container h1 {
+    font-size: 24px;
+  }
+
+  /* Футер */
+  .footer {
+    padding: 20px 0;
+    font-size: 14px;
+  }
+}
+
+/* Дуже малі телефони (до 360px) */
+@media (max-width: 360px) {
+  .hero-title {
+    font-size: 22px;
+  }
+
+  .nav-menu {
+    gap: 8px;
+    font-size: 12px;
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+
+  .calendar-weekdays {
+    font-size: 10px;
+  }
+
+  .calendar-day {
+    font-size: 10px;
+  }
+}
+
+/* Ландшафтна орієнтація на мобільних */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero {
+    padding: 40px 0;
+    min-height: auto;
+  }
+
+  .filters-sidebar {
+    max-height: 60vh;
+  }
+
+  .calendar-grid {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+}
+.popularity-info {
+  margin-top: 8px;
+  color: var(--text-light);
+  font-size: 13px;
+}
+
+.popularity-info small {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
