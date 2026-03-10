@@ -1109,3 +1109,862 @@ body {
   align-items: center;
   gap: 5px;
 }
+/* ===== Сторінка спеціалістів ===== */
+.specialist-card.horizontal {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.specialist-card.horizontal:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+
+.specialist-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--bg-light);
+  flex-shrink: 0;
+}
+
+.specialist-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  color: white;
+  font-size: 32px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.specialist-card .card-info {
+  flex: 1;
+}
+
+.specialist-card h3 {
+  color: var(--navy);
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.specialist-specialty {
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.specialist-directions {
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+/* Адаптивність для мобільних */
+@media (max-width: 768px) {
+  .specialist-card.horizontal {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .specialist-avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .avatar-placeholder {
+    font-size: 24px;
+  }
+}
+/* ===== Сторінка спеціаліста (детальна) ===== */
+.specialist-detail {
+  padding: 40px 0;
+}
+
+.specialist-header {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 40px;
+  background: var(--card-bg);
+  padding: 30px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  flex-wrap: wrap;
+}
+
+.specialist-photo-wrapper {
+  flex-shrink: 0;
+}
+
+.specialist-photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 3px solid var(--primary);
+}
+
+.specialist-photo:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-hover);
+}
+
+.specialist-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-placeholder {
+  width: 100%;
+  height: 100%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.specialist-info {
+  flex: 1;
+}
+
+.specialist-info h1 {
+  color: var(--navy);
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.specialist-title {
+  color: var(--primary);
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.specialist-experience {
+  color: var(--text-light);
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.specialist-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #f39c12;
+  font-size: 16px;
+}
+
+.rating-value {
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.rating-count {
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+.book-btn {
+  padding: 12px 30px;
+  font-size: 16px;
+  white-space: nowrap;
+}
+
+/* Двоколонковий макет */
+.specialist-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+/* Ліва колонка */
+.specialist-left {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* Права колонка */
+.specialist-right {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* Інформаційні картки */
+.info-card {
+  background: var(--card-bg);
+  padding: 25px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.info-card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.info-card h2 {
+  color: var(--navy);
+  font-size: 22px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 10px;
+}
+
+/* Теги напрямків */
+.directions-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tag {
+  background: var(--bg-light);
+  color: var(--primary);
+  padding: 6px 15px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid var(--primary);
+  transition: var(--transition);
+}
+
+.tag:hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* Списки освіти */
+.education-list,
+.certificates-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.education-list li,
+.certificates-list li {
+  padding: 8px 0;
+  border-bottom: 1px dashed #eee;
+  color: var(--text-light);
+}
+
+.education-list li:last-child,
+.certificates-list li:last-child {
+  border-bottom: none;
+}
+
+/* Календар */
+.calendar-card h3 {
+  color: var(--navy);
+  font-size: 18px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 20px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-light);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--text-dark);
+}
+
+.calendar-day.has-slots {
+  background: white;
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.calendar-day.has-slots:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.calendar-day.selected {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.calendar-day:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  background: #f1f5f9;
+}
+
+/* Слоти */
+.slots-container h4 {
+  color: var(--navy);
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.slot-btn {
+  background: var(--bg-light);
+  border: 1px solid #e2e8f0;
+  padding: 10px;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 14px;
+}
+
+.slot-btn:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.no-slots {
+  color: var(--text-light);
+  text-align: center;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: var(--border-radius-sm);
+  font-size: 14px;
+}
+
+/* Відгуки */
+.reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.view-all-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.review-item {
+  padding: 15px 0;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.review-item:last-child {
+  border-bottom: none;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.review-header strong {
+  color: var(--navy);
+}
+
+.review-date {
+  color: var(--text-light);
+  font-size: 12px;
+}
+
+.review-rating {
+  color: #f39c12;
+  margin-bottom: 8px;
+}
+
+.review-text {
+  color: var(--text-light);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Модальне вікно для фото */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.modal-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 10px;
+  cursor: default;
+}
+
+.modal-close {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+}
+
+.modal-close:hover {
+  background: var(--primary-dark);
+  transform: scale(1.1);
+}
+
+.modal-image {
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: var(--border-radius);
+  display: block;
+}
+
+.modal-placeholder {
+  width: 300px;
+  height: 300px;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 100px;
+  font-weight: 600;
+  border-radius: var(--border-radius);
+}
+
+/* Адаптивність */
+@media (max-width: 1024px) {
+  .specialist-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .specialist-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .specialist-photo {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .book-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .specialist-header {
+    padding: 20px;
+  }
+  
+  .specialist-photo {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .specialist-info h1 {
+    font-size: 28px;
+  }
+  
+  .slot-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.specialist-photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: zoom-in;
+  transition: transform 0.3s ease;
+  border: 3px solid var(--primary);
+  box-shadow: var(--shadow);
+}
+
+.specialist-photo.zoomed {
+  transform: scale(1.5);
+  cursor: zoom-out;
+  z-index: 100;
+  position: relative;
+}
+
+.specialist-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* ===== Сторінка локацій ===== */
+.locations-page {
+  padding: 40px 0;
+  background-color: var(--bg-light);
+}
+
+.locations-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+/* Ліва колонка – список */
+.locations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.location-card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 25px;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.location-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+
+.location-card h2 {
+  color: var(--navy);
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.location-address {
+  color: var(--text-dark);
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.location-hours {
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.location-actions {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.location-actions .btn-outline {
+  margin-top: 0;
+  flex: 1;
+  text-align: center;
+  min-width: 140px;
+}
+
+/* Контактна картка */
+.contact-info-card {
+  background: var(--navy);
+  color: white;
+  border-radius: var(--border-radius);
+  padding: 25px;
+  box-shadow: var(--shadow);
+}
+
+.contact-info-card h3 {
+  color: white;
+  font-size: 22px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 10px;
+}
+
+.contact-info-card p {
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+.contact-info-card strong {
+  color: var(--primary);
+}
+
+/* Права колонка – карта */
+.map-container {
+  height: 600px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 100px;
+}
+
+/* Адаптивність */
+@media (max-width: 992px) {
+  .locations-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .map-container {
+    height: 400px;
+    position: static;
+    order: -1; /* карта зверху на мобільних */
+  }
+}
+
+@media (max-width: 576px) {
+  .location-actions {
+    flex-direction: column;
+  }
+  
+  .map-container {
+    height: 300px;
+  }
+}
+/* ===== Сторінка контактів ===== */
+.contacts-page {
+  padding: 40px 0;
+  background-color: var(--bg-light);
+}
+
+.contacts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+/* Ліва колонка – форма */
+.contact-form-card {
+  background: var(--card-bg);
+  padding: 30px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+.contact-form-card h2 {
+  color: var(--navy);
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.form-subtitle {
+  color: var(--text-light);
+  margin-bottom: 25px;
+  font-size: 16px;
+}
+
+.form-row {
+  margin-bottom: 20px;
+}
+
+.form-row input,
+.form-row textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--border-radius-sm);
+  font-size: 16px;
+  transition: var(--transition);
+}
+
+.form-row input:focus,
+.form-row textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(30, 167, 168, 0.1);
+}
+
+.form-row textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.success-message {
+  background: #d4edda;
+  color: #155724;
+  padding: 15px;
+  border-radius: var(--border-radius-sm);
+  margin-bottom: 20px;
+  text-align: center;
+  border: 1px solid #c3e6cb;
+}
+
+.privacy-note {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-light);
+  margin-top: 15px;
+}
+
+/* Права колонка – контактна інформація */
+.contact-info-card {
+  background: var(--navy);
+  color: white;
+  padding: 30px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+.contact-info-card h2 {
+  color: white;
+  font-size: 24px;
+  margin-bottom: 25px;
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 10px;
+}
+
+.info-block {
+  margin-bottom: 25px;
+}
+
+.info-block h3 {
+  color: var(--primary);
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.info-link {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  transition: var(--transition);
+  display: inline-block;
+}
+
+.info-link:hover {
+  color: var(--primary);
+  transform: translateX(5px);
+}
+
+.info-block p {
+  color: white;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.messenger-links {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.messenger-link {
+  background: var(--primary);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.messenger-link:hover {
+  background: white;
+  color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+  .contacts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .contact-info-card {
+    order: -1; /* Контактна інформація зверху на мобільних */
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-form-card,
+  .contact-info-card {
+    padding: 20px;
+  }
+  
+  .messenger-links {
+    flex-direction: column;
+  }
+  
+  .messenger-link {
+    text-align: center;
+  }
+}
