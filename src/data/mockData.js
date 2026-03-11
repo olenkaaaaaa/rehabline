@@ -174,37 +174,6 @@ export const appointments = [
   }
 ];
 
-// ==================== КЛІЄНТИ ====================
-export const clients = [
-  {
-    id: 1,
-    name: 'Бурдяк Олена',
-    email: 'burdyak.olena@gmail.com',
-    phone: '+380 99 123 45 67',
-    language: 'UA',
-    timezone: 'Europe/Kiev',
-    birthDate: '1990-05-15'
-  },
-  {
-    id: 2,
-    name: 'Мельник Ірина',
-    email: 'iryna.m@gmail.com',
-    phone: '+380 50 234 56 78',
-    language: 'UA',
-    timezone: 'Europe/Kiev',
-    birthDate: '1985-08-22'
-  },
-  {
-    id: 3,
-    name: 'Климчук Сергій',
-    email: 's.klymchuk@ukr.net',
-    phone: '+380 67 345 67 89',
-    language: 'UA',
-    timezone: 'Europe/Kiev',
-    birthDate: '1978-03-10'
-  }
-];
-
 // ==================== ВІДГУКИ ====================
 export const reviews = [
   {
@@ -598,3 +567,18 @@ export const contactInfo = {
     whatsapp: 'https://wa.me/380XXXXXXXXX'
   }
 };
+// ==================== КЛІЄНТИ ====================
+// У масив clients додайте поле role
+export const clients = [
+  {
+    id: 1,
+    name: 'Бурдяк Олена',
+    email: 'burdyak.olena@gmail.com',
+    phone: '+380 99 123 45 67',
+    language: 'UA',
+    timezone: 'Europe/Kiev',
+    birthDate: '1990-05-15',
+    role: 'client' // client, specialist, admin
+  },
+  // ...
+];
