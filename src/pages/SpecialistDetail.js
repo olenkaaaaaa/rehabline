@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
-import { specialists, locations, calendarData } from '../data/mockData'; // Імпортуємо calendarData
+import { useAuth } from '../contexts/AuthContext';
+import { specialists, calendarData } from '../data/mockData';
 
-// Дні тижня (не змінюються, можна залишити тут)
+// Дні тижня для календаря
 const weekDays = {
   UA: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'],
   EN: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -12,9 +13,14 @@ const weekDays = {
 const SpecialistDetail = () => {
   const { id } = useParams();
   const { lang } = useLanguage();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [specialist, setSpecialist] = useState(null);
-  const [selectedDate, setSelectedDate] = useState('24'); // За замовчуванням 24 лютого
+  const [selectedDate, setSelectedDate] = useState('24'); // за замовчуванням 24 лютого
   const [availableSlots, setAvailableSlots] = useState([]);
+  const [selectedTime, setSelectedTime] = useState(null);
   const [isZoomed, setIsZoomed] = useState(false);
   const photoRef = useRef(null);
 
@@ -28,6 +34,7 @@ const SpecialistDetail = () => {
   useEffect(() => {
     const dayData = calendarData.days.find(d => d.day === parseInt(selectedDate));
     setAvailableSlots(dayData?.slots || []);
+    setSelectedTime(null); // скидаємо час при зміні дати
   }, [selectedDate]);
 
   // Закриття збільшеного фото при кліку поза ним
@@ -43,8 +50,14 @@ const SpecialistDetail = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isZoomed]);
 
-  const handlePhotoClick = () => {
-    setIsZoomed(!isZoomed);
+  const handlePhotoClick = () => setIsZoomed(!isZoomed);
+
+  const handleBookClick = () => {
+    if (user) {
+      navigate(`/booking?specialist=${specialist.id}`);
+    } else {
+      navigate('/login', { state: { from: `/booking?specialist=${specialist.id}` } });
+    }
   };
 
   if (!specialist) {
@@ -55,21 +68,13 @@ const SpecialistDetail = () => {
     ? (specialist.reviews.reduce((acc, r) => acc + r.rating, 0) / specialist.reviews.length).toFixed(1)
     : null;
 
-    console.log('specialist', specialist);
-console.log('specialist.specialty', specialist.specialty);
-console.log('specialist.description', specialist.description);
-console.log('specialist.directions', specialist.directions);
-console.log('specialist.education', specialist.education);
-console.log('specialist.certificates', specialist.certificates);
-console.log('calendarData.month', calendarData.month);
-
   return (
     <div className="specialist-detail">
       <div className="container">
         {/* Верхній блок з фото, інфо та кнопкою */}
         <div className="specialist-header">
           <div className="specialist-photo-wrapper">
-            <div 
+            <div
               className={`specialist-photo ${isZoomed ? 'zoomed' : ''}`}
               onClick={handlePhotoClick}
               ref={photoRef}
@@ -101,9 +106,9 @@ console.log('calendarData.month', calendarData.month);
             )}
           </div>
 
-          <Link to={`/booking?specialist=${specialist.id}`} className="btn-primary book-btn">
+          <button onClick={handleBookClick} className="btn-primary book-btn">
             {lang === 'UA' ? 'Записатися' : 'Book'}
-          </Link>
+          </button>
         </div>
 
         {/* Основний двоколонковий макет */}
@@ -185,7 +190,13 @@ console.log('calendarData.month', calendarData.month);
                 <div className="slot-grid">
                   {availableSlots.length > 0 ? (
                     availableSlots.map(time => (
-                      <button key={time} className="slot-btn">{time}</button>
+                      <button
+                        key={time}
+                        className={`slot-btn ${selectedTime === time ? 'selected' : ''}`}
+                        onClick={() => setSelectedTime(time)}
+                      >
+                        {time}
+                      </button>
                     ))
                   ) : (
                     <p className="no-slots">
