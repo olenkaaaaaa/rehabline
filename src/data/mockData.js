@@ -110,70 +110,6 @@ export const services = [
   }
 ];
 
-// ==================== ЗАПИСИ (Appointments) ====================
-export const appointments = [
-  {
-    id: 1,
-    clientId: 1,
-    serviceId: 1,
-    specialistId: 1,
-    locationId: 1,
-    date: '2026-02-10',
-    time: '09:00',
-    status: 'confirmed',
-    clientNotes: 'Біль у попереку після тренування',
-    specialistNotes: ''
-  },
-  {
-    id: 2,
-    clientId: 1,
-    serviceId: 3,
-    specialistId: 1,
-    locationId: 1,
-    date: '2026-02-12',
-    time: '18:15',
-    status: 'pending',
-    clientNotes: '',
-    specialistNotes: ''
-  },
-  {
-    id: 3,
-    clientId: 1,
-    serviceId: 2,
-    specialistId: 3,
-    locationId: 2,
-    date: '2026-02-18',
-    time: '10:30',
-    status: 'confirmed',
-    clientNotes: '',
-    specialistNotes: ''
-  },
-  {
-    id: 4,
-    clientId: 2,
-    serviceId: 1,
-    specialistId: 1,
-    locationId: 1,
-    date: '2026-02-10',
-    time: '10:30',
-    status: 'confirmed',
-    clientNotes: '',
-    specialistNotes: ''
-  },
-  {
-    id: 5,
-    clientId: 3,
-    serviceId: 2,
-    specialistId: 2,
-    locationId: 1,
-    date: '2026-02-10',
-    time: '12:15',
-    status: 'pending',
-    clientNotes: 'Сильний біль у шиї',
-    specialistNotes: ''
-  }
-];
-
 // ==================== ВІДГУКИ ====================
 export const reviews = [
   {
@@ -582,3 +518,36 @@ export const clients = [
   },
   // ...
 ];
+
+// Додаємо нотатки лікаря до записів
+export const appointments = [
+  {
+    id: 1,
+    clientId: 1,
+    serviceId: 1,
+    specialistId: 1,
+    locationId: 1,
+    date: '2026-02-10',
+    time: '09:00',
+    status: 'confirmed',
+    clientNotes: 'Біль у попереку після тренування',
+    specialistNotes: 'Рекомендовано ЛФК, уникати навантажень. Наступний візит через 2 тижні.', // нове поле
+  },
+  // ... інші
+];
+
+// Додаємо рецепти/рекомендації
+export const prescriptions = [
+  {
+    id: 1,
+    clientId: 1,
+    appointmentId: 1,
+    title: { UA: 'План ЛФК', EN: 'Physical therapy plan' },
+    description: { UA: 'Вправи для зміцнення м\'язів спини: ...', EN: 'Exercises to strengthen back muscles: ...' },
+    fileUrl: '/files/lfk_plan.pdf', // опціонально
+    date: '2026-02-10',
+  },
+  // ... інші
+];
+
+// Додаємо відгуки (вже є)

@@ -1,50 +1,103 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { FaGoogle, FaFacebookF, FaApple } from 'react-icons/fa';
-import { MdEmail, MdPhone } from 'react-icons/md';
 
 const Login = () => {
   const { lang } = useLanguage();
-  const { login } = useAuth();
+  const { login, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
+  // Шлях, з якого прийшли, або default залежно від ролі (буде визначено після логіну)
+  const from = location.state?.from;
+
+  // Стан форми
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showCodeLogin, setShowCodeLogin] = useState(false);
-  const [code, setCode] = useState(['', '', '', '', '', '']); // для 6 цифр OTP
+  const [code, setCode] = useState(['', '', '', '', '', '']);
+  const [timer, setTimer] = useState(45);
+  const [canResend, setCanResend] = useState(false);
 
-  const handleSubmit = (e) => {
+  // Таймер для OTP
+  useEffect(() => {
+    let interval;
+    if (showCodeLogin && timer > 0) {
+      interval = setInterval(() => {
+        setTimer(prev => {
+          if (prev <= 1) {
+            setCanResend(true);
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [showCodeLogin, timer]);
+
+  // Обробка входу за паролем
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Імітація логіну – в реальності тут буде запит до API
-    login({ name: 'Тестовий клієнт', role: 'client' });
-    navigate('/client');
+    try {
+      const userData = await login(email, password);
+      // Визначаємо шлях за замовчуванням на основі ролі, якщо from не задано
+      let defaultPath = '/client';
+      if (userData.role === 'specialist') defaultPath = '/specialist';
+      else if (userData.role === 'registrar') defaultPath = '/registrar';
+      else if (userData.role === 'admin') defaultPath = '/admin';
+      navigate(from || defaultPath, { replace: true });
+    } catch (error) {
+      console.error('Login failed:', error);
+      alert(lang === 'UA' ? 'Невірний email або пароль' : 'Invalid email or password');
+    }
   };
 
+  // Соціальний вхід (демо)
   const handleSocialLogin = (provider) => {
     console.log(`Login with ${provider}`);
-    // Тут буде виклик OAuth
+    // Тут буде реальна інтеграція з Firebase, Google OAuth тощо
+    // Після успіху – navigate(from || defaultPath)
   };
 
+  // Зміна цифр OTP
   const handleCodeChange = (index, value) => {
     if (value.length <= 1 && /^\d*$/.test(value)) {
       const newCode = [...code];
       newCode[index] = value;
       setCode(newCode);
-      // Автоматично переходимо до наступного поля
+      // Автоперехід до наступного поля
       if (value && index < 5) {
         document.getElementById(`code-${index + 1}`).focus();
       }
     }
   };
 
+  // Вхід за кодом
   const handleCodeSubmit = (e) => {
     e.preventDefault();
     const fullCode = code.join('');
+    if (fullCode.length !== 6) {
+      alert(lang === 'UA' ? 'Введіть 6-значний код' : 'Enter 6-digit code');
+      return;
+    }
     console.log('Verifying code:', fullCode);
-    // Тут відправка коду на сервер
+    // Тут має бути запит на перевірку коду
+    // Якщо код правильний – отримуємо userData і перенаправляємо
+    // Для демо просто перейдемо на головну сторінку клієнта
+    navigate('/client', { replace: true });
+  };
+
+  // Повторне надсилання коду
+  const handleResendCode = () => {
+    setTimer(45);
+    setCanResend(false);
+    setCode(['', '', '', '', '', '']);
+    console.log('Resend OTP');
   };
 
   return (
@@ -54,7 +107,7 @@ const Login = () => {
           {lang === 'UA' ? 'Вхід' : 'Login'}
         </h1>
         <p className="auth-subtitle">
-          {lang === 'UA' ? 'Увійдіть до кабінету клієнта' : 'Sign in to your client account'}
+          {lang === 'UA' ? 'Увійдіть до кабінету' : 'Sign in to your account'}
         </p>
 
         {!showCodeLogin ? (
@@ -71,6 +124,7 @@ const Login = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="burdyak.olena@gmail.com"
                 required
+                disabled={loading}
               />
             </div>
 
@@ -85,6 +139,7 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="********"
                 required
+                disabled={loading}
               />
             </div>
 
@@ -94,16 +149,17 @@ const Login = () => {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
+                  disabled={loading}
                 />
-                <span>{lang === 'UA' ? 'Запам\'ятати мене' : 'Remember me'}</span>
+                <span>{lang === 'UA' ? "Запам'ятати мене" : 'Remember me'}</span>
               </label>
               <Link to="/forgot-password" className="forgot-link">
                 {lang === 'UA' ? 'Забули пароль?' : 'Forgot password?'}
               </Link>
             </div>
 
-            <button type="submit" className="btn-primary auth-btn">
-              {lang === 'UA' ? 'Увійти' : 'Sign in'}
+            <button type="submit" className="btn-primary auth-btn" disabled={loading}>
+              {loading ? (lang === 'UA' ? 'Завантаження...' : 'Loading...') : (lang === 'UA' ? 'Увійти' : 'Sign in')}
             </button>
 
             <div className="auth-divider">
@@ -115,6 +171,7 @@ const Login = () => {
                 type="button"
                 className="social-btn google"
                 onClick={() => handleSocialLogin('Google')}
+                disabled={loading}
               >
                 <FaGoogle />
                 <span>Google</span>
@@ -123,6 +180,7 @@ const Login = () => {
                 type="button"
                 className="social-btn facebook"
                 onClick={() => handleSocialLogin('Facebook')}
+                disabled={loading}
               >
                 <FaFacebookF />
                 <span>Facebook</span>
@@ -131,6 +189,7 @@ const Login = () => {
                 type="button"
                 className="social-btn apple"
                 onClick={() => handleSocialLogin('Apple')}
+                disabled={loading}
               >
                 <FaApple />
                 <span>Apple</span>
@@ -141,6 +200,7 @@ const Login = () => {
               type="button"
               className="code-login-link"
               onClick={() => setShowCodeLogin(true)}
+              disabled={loading}
             >
               {lang === 'UA' ? 'Увійти за кодом (SMS/Email)' : 'Login with code (SMS/Email)'}
             </button>
@@ -165,26 +225,43 @@ const Login = () => {
                   onChange={(e) => handleCodeChange(index, e.target.value)}
                   className="code-digit"
                   autoFocus={index === 0}
+                  disabled={loading}
                 />
               ))}
             </div>
 
-            <button type="submit" className="btn-primary auth-btn">
+            <button type="submit" className="btn-primary auth-btn" disabled={loading}>
               {lang === 'UA' ? 'Підтвердити' : 'Verify'}
             </button>
 
             <div className="code-resend">
               <span>{lang === 'UA' ? 'Не отримали код?' : 'Didn\'t receive the code?'}</span>
-              <button type="button" className="resend-btn">
+              <button
+                type="button"
+                className="resend-btn"
+                onClick={handleResendCode}
+                disabled={!canResend || loading}
+              >
                 {lang === 'UA' ? 'Надіслати ще раз' : 'Resend'}
               </button>
-              <span className="timer">00:45</span>
+              {timer > 0 && (
+                <span className="timer">
+                  {Math.floor(timer / 60)}:{timer % 60 < 10 ? '0' : ''}
+                  {timer % 60}
+                </span>
+              )}
             </div>
 
             <button
               type="button"
               className="back-to-password"
-              onClick={() => setShowCodeLogin(false)}
+              onClick={() => {
+                setShowCodeLogin(false);
+                setCode(['', '', '', '', '', '']);
+                setTimer(45);
+                setCanResend(false);
+              }}
+              disabled={loading}
             >
               ← {lang === 'UA' ? 'Назад до входу за паролем' : 'Back to password login'}
             </button>
@@ -194,7 +271,7 @@ const Login = () => {
         <div className="auth-footer">
           <p>
             {lang === 'UA' ? 'Немає акаунта?' : 'Don\'t have an account?'}{' '}
-            <Link to="/register" className="register-link">
+            <Link to="/register" state={{ from }} className="register-link">
               {lang === 'UA' ? 'Зареєструватися' : 'Register'}
             </Link>
           </p>
