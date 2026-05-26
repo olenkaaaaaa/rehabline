@@ -1,184 +1,118 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { contactInfo } from '../data/mockData';
+import '../styles/pages/contacts.css';
 
 const Contacts = () => {
   const { lang } = useLanguage();
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    topic: '',
-    message: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Імітація відправки форми
-    setTimeout(() => {
-      console.log('Form submitted:', formData);
-      setIsSubmitting(false);
-      setSubmitSuccess(true);
-      setFormData({ name: '', phone: '', email: '', topic: '', message: '' });
-      
-      // Скинути повідомлення про успіх через 5 секунд
-      setTimeout(() => setSubmitSuccess(false), 5000);
-    }, 1000);
-  };
 
   return (
-    <div className="contacts-page">
-      <div className="container">
-        <h1 className="section-title">
-          {lang === 'UA' ? 'Контакти' : 'Contacts'}
-        </h1>
+    <main className="contacts-page">
+      <section className="contacts-hero">
+        <div className="container">
+          <h1>{lang === 'UA' ? 'Контакти' : 'Contacts'}</h1>
+          <p>
+            {lang === 'UA'
+              ? 'Звʼяжіться з нами зручним способом або залиште повідомлення.'
+              : 'Contact us in a convenient way or leave a message.'}
+          </p>
+        </div>
+      </section>
 
-        <div className="contacts-grid">
-          {/* Ліва колонка – форма */}
-          <div className="contact-form-card">
-            <h2>
-              {lang === 'UA' 
-                ? 'Зв\'яжіться з нами' 
-                : 'Get in touch'}
-            </h2>
-            <p className="form-subtitle">
-              {lang === 'UA'
-                ? 'Залиште своє повідомлення, і наш менеджер зв\'яжеться з вами найближчим часом'
-                : 'Leave your message and our manager will contact you soon'}
-            </p>
-
-            {submitSuccess && (
-              <div className="success-message">
+      <section className="contacts-section">
+        <div className="container">
+          <div className="contacts-grid">
+            <div className="contact-card">
+              <div className="contact-icon">📞</div>
+              <h3>{lang === 'UA' ? 'Телефон' : 'Phone'}</h3>
+              <p>+38 (0XX) XXX-XX-XX</p>
+              <span>
                 {lang === 'UA'
-                  ? 'Дякуємо! Ваше повідомлення надіслано.'
-                  : 'Thank you! Your message has been sent.'}
-              </div>
-            )}
+                  ? 'Пн–Пт: 08:00–20:00'
+                  : 'Mon–Fri: 08:00–20:00'}
+              </span>
+            </div>
 
-            <form onSubmit={handleSubmit}>
+            <div className="contact-card">
+              <div className="contact-icon">✉️</div>
+              <h3>Email</h3>
+              <p>support@rehabline.ua</p>
+              <span>
+                {lang === 'UA'
+                  ? 'Відповідаємо протягом робочого дня'
+                  : 'We respond during business hours'}
+              </span>
+            </div>
+
+            <div className="contact-card">
+              <div className="contact-icon">💬</div>
+              <h3>{lang === 'UA' ? 'Підтримка' : 'Support'}</h3>
+              <p>
+                {lang === 'UA'
+                  ? 'Допомога із записом'
+                  : 'Booking assistance'}
+              </p>
+              <span>
+                {lang === 'UA'
+                  ? 'Підкажемо з послугами та спеціалістами'
+                  : 'We help with services and specialists'}
+              </span>
+            </div>
+          </div>
+
+          <div className="contact-form-card">
+            <div>
+              <h2>
+                {lang === 'UA'
+                  ? 'Напишіть нам'
+                  : 'Send us a message'}
+              </h2>
+
+              <p>
+                {lang === 'UA'
+                  ? 'Залиште коротке повідомлення, і адміністратор звʼяжеться з вами.'
+                  : 'Leave a short message and the administrator will contact you.'}
+              </p>
+            </div>
+
+            <form className="contact-form">
               <div className="form-row">
-                <input
-                  type="text"
-                  name="name"
-                  placeholder={lang === 'UA' ? "Ваше ім'я" : "Your name"}
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                />
+                <div className="form-group">
+                  <label>
+                    {lang === 'UA' ? 'Ваше імʼя' : 'Your name'}
+                  </label>
+                  <input type="text" placeholder={lang === 'UA' ? 'Імʼя' : 'Name'} />
+                </div>
+
+                <div className="form-group">
+                  <label>
+                    {lang === 'UA' ? 'Телефон або email' : 'Phone or email'}
+                  </label>
+                  <input type="text" placeholder="+380..." />
+                </div>
               </div>
 
-              <div className="form-row">
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder={lang === 'UA' ? "Номер телефону" : "Phone number"}
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="form-row">
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="form-row">
-                <input
-                  type="text"
-                  name="topic"
-                  placeholder={lang === 'UA' ? "Тема" : "Subject"}
-                  value={formData.topic}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="form-row">
+              <div className="form-group">
+                <label>
+                  {lang === 'UA' ? 'Повідомлення' : 'Message'}
+                </label>
                 <textarea
-                  name="message"
                   rows="5"
-                  placeholder={lang === 'UA' ? "Повідомлення" : "Message"}
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
+                  placeholder={
+                    lang === 'UA'
+                      ? 'Напишіть ваше питання...'
+                      : 'Write your question...'
+                  }
                 />
               </div>
 
-              <button 
-                type="submit" 
-                className="btn-primary submit-btn"
-                disabled={isSubmitting}
-              >
-                {isSubmitting 
-                  ? (lang === 'UA' ? 'Відправка...' : 'Sending...') 
-                  : (lang === 'UA' ? 'Надіслати' : 'Send')}
+              <button type="button" className="btn btn-primary">
+                {lang === 'UA' ? 'Надіслати' : 'Send'}
               </button>
             </form>
-
-            <p className="privacy-note">
-              {lang === 'UA'
-                ? 'Натискаючи "Надіслати", ви погоджуєтесь з політикою конфіденційності'
-                : 'By clicking "Send", you agree to our privacy policy'}
-            </p>
-          </div>
-
-          {/* Права колонка – контактна інформація */}
-          <div className="contact-info-card">
-            <h2>{lang === 'UA' ? 'Контакти' : 'Contact info'}</h2>
-            
-            <div className="info-block">
-              <h3>{lang === 'UA' ? 'Гаряча лінія' : 'Hotline'}</h3>
-              <a href={`tel:${contactInfo.hotline.replace(/\s/g, '')}`} className="info-link">
-                {contactInfo.hotline}
-              </a>
-            </div>
-
-            <div className="info-block">
-              <h3>Email</h3>
-              <a href={`mailto:${contactInfo.email}`} className="info-link">
-                {contactInfo.email}
-              </a>
-            </div>
-
-            <div className="info-block">
-              <h3>{lang === 'UA' ? 'Години роботи' : 'Working hours'}</h3>
-              <p>{contactInfo.hours[lang]}</p>
-            </div>
-
-            <div className="info-block">
-              <h3>{lang === 'UA' ? 'Месенджери' : 'Messengers'}</h3>
-              <div className="messenger-links">
-                <a href={contactInfo.messengers.telegram} target="_blank" rel="noopener noreferrer" className="messenger-link">
-                  Telegram
-                </a>
-                <a href={contactInfo.messengers.viber} target="_blank" rel="noopener noreferrer" className="messenger-link">
-                  Viber
-                </a>
-                <a href={contactInfo.messengers.whatsapp} target="_blank" rel="noopener noreferrer" className="messenger-link">
-                  WhatsApp
-                </a>
-              </div>
-            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 

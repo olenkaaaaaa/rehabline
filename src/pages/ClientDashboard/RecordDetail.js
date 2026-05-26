@@ -1,73 +1,286 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { appointments, services, specialists, locations, prescriptions } from '../../data/mockData';
+import { useAuth } from '../../contexts/AuthContext';
+import { supabase } from '../../supabaseClient';
+import '../../styles/pages/client-record-detail.css';
+
+const getServiceName = (service, lang) => {
+  return lang === 'UA'
+    ? service?.name_ua || service?.name || ''
+    : service?.name_en || service?.name_ua || service?.name || '';
+};
+
+const getLocationName = (location, lang) => {
+  return lang === 'UA'
+    ? location?.name_ua || location?.name || ''
+    : location?.name_en || location?.name_ua || location?.name || '';
+};
+
+const getLocationAddress = (location, lang) => {
+  return lang === 'UA'
+    ? location?.address_ua || location?.address || ''
+    : location?.address_en || location?.address_ua || location?.address || '';
+};
+
+const getStatusLabel = (status, lang) => {
+  const labels = {
+    pending: { UA: 'Очікує', EN: 'Pending' },
+    confirmed: { UA: 'Підтверджено', EN: 'Confirmed' },
+    cancelled: { UA: 'Скасовано', EN: 'Cancelled' },
+    canceled: { UA: 'Скасовано', EN: 'Cancelled' },
+    completed: { UA: 'Завершено', EN: 'Completed' },
+  };
+
+  return labels[status]?.[lang] || status || '—';
+};
+
+const normalizeStatusClass = (status) => {
+  if (status === 'canceled') return 'cancelled';
+  return status || 'pending';
+};
 
 const RecordDetail = () => {
   const { id } = useParams();
   const { lang } = useLanguage();
+  const { user } = useAuth();
   const navigate = useNavigate();
+
   const [appointment, setAppointment] = useState(null);
-  const [prescriptionsList, setPrescriptionsList] = useState([]);
-  const [isRescheduling, setIsRescheduling] = useState(false); // для можливого вибору нового часу
+  const [service, setService] = useState(null);
+  const [specialist, setSpecialist] = useState(null);
+  const [location, setLocation] = useState(null);
+  const [prescriptions, setPrescriptions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [pageError, setPageError] = useState('');
+  const [cancelling, setCancelling] = useState(false);
 
   useEffect(() => {
-    const app = appointments.find(a => a.id === parseInt(id));
-    if (app) {
-      const service = services.find(s => s.id === app.serviceId);
-      const specialist = specialists.find(s => s.id === app.specialistId);
-      const location = locations.find(l => l.id === app.locationId);
-      setAppointment({
-        ...app,
-        serviceName: service?.name[lang] || '',
-        specialistName: specialist?.name || '',
-        locationName: location?.name[lang] || '',
-        locationAddress: location?.address || '',
-        duration: service?.duration || 60,
-      });
-      const relatedPrescriptions = prescriptions.filter(p => p.appointmentId === app.id);
-      setPrescriptionsList(relatedPrescriptions);
-    }
-  }, [id, lang]);
+    let isMounted = true;
+
+    const loadAppointment = async () => {
+      if (!user?.id) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setPageError('');
+
+        const { data: appointmentData, error: appointmentError } = await supabase
+          .from('appointments')
+          .select('*')
+          .eq('id', Number(id))
+          .eq('client_id', user.id)
+          .single();
+
+        if (appointmentError) throw appointmentError;
+
+        const [
+          serviceResponse,
+          specialistResponse,
+          locationResponse,
+          prescriptionsResponse,
+        ] = await Promise.all([
+          appointmentData.service_id
+            ? supabase.from('services').select('*').eq('id', appointmentData.service_id).single()
+            : Promise.resolve({ data: null, error: null }),
+
+          appointmentData.specialist_id
+            ? supabase.from('specialists').select('*').eq('id', appointmentData.specialist_id).single()
+            : Promise.resolve({ data: null, error: null }),
+
+          appointmentData.location_id
+            ? supabase.from('locations').select('*').eq('id', appointmentData.location_id).single()
+            : Promise.resolve({ data: null, error: null }),
+
+          supabase
+            .from('prescriptions')
+            .select('*')
+            .eq('appointment_id', Number(id))
+            .order('created_at', { ascending: false }),
+        ]);
+
+        if (serviceResponse.error) throw serviceResponse.error;
+        if (specialistResponse.error) throw specialistResponse.error;
+        if (locationResponse.error) throw locationResponse.error;
+
+        if (prescriptionsResponse.error) {
+          console.warn('Prescriptions loading failed:', prescriptionsResponse.error);
+        }
+
+        if (!isMounted) return;
+
+        setAppointment(appointmentData);
+        setService(serviceResponse.data || null);
+        setSpecialist(specialistResponse.data || null);
+        setLocation(locationResponse.data || null);
+        setPrescriptions(prescriptionsResponse.data || []);
+      } catch (error) {
+        console.error('Record detail loading failed:', error);
+
+        if (!isMounted) return;
+
+        setPageError(
+          lang === 'UA'
+            ? 'Не вдалося завантажити деталі запису'
+            : 'Failed to load appointment details'
+        );
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadAppointment();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [id, user, lang]);
+
+  const preparedAppointment = useMemo(() => {
+    if (!appointment) return null;
+
+    return {
+      ...appointment,
+      date: appointment.appointment_date,
+      time: String(appointment.appointment_time || '').slice(0, 5),
+      serviceName: getServiceName(service, lang),
+      specialistName: specialist?.name || '',
+      locationName: getLocationName(location, lang),
+      locationAddress: getLocationAddress(location, lang),
+      duration: service?.duration_minutes || 45,
+      clientNotes: appointment.client_notes || '',
+      specialistNotes: appointment.specialist_notes || '',
+    };
+  }, [appointment, service, specialist, location, lang]);
+
+  const isFuture = () => {
+    if (!preparedAppointment?.date || !preparedAppointment?.time) return false;
+
+    const visitDate = new Date(`${preparedAppointment.date}T${preparedAppointment.time}:00`);
+    return visitDate.getTime() > Date.now();
+  };
 
   const getGoogleCalendarUrl = () => {
-    if (!appointment) return '#';
-    const start = new Date(`${appointment.date}T${appointment.time}:00`);
-    const durationMinutes = parseInt(appointment.duration) || 60;
-    const end = new Date(start.getTime() + durationMinutes * 60000);
-    const formatDate = (date) => date.toISOString().replace(/-|:|\.\d+/g, '');
-    const params = new URLSearchParams({
-      action: 'TEMPLATE',
-      text: appointment.serviceName,
-      details: `Запис до ${appointment.specialistName}`,
-      location: appointment.locationName,
-      dates: `${formatDate(start)}/${formatDate(end)}`,
-    });
-    return `https://www.google.com/calendar/render?${params.toString()}`;
+    if (!preparedAppointment) return '#';
+
+    const start = new Date(`${preparedAppointment.date}T${preparedAppointment.time}:00`);
+    const end = new Date(start);
+
+    end.setMinutes(end.getMinutes() + Number(preparedAppointment.duration || 45));
+
+    const formatForGoogle = (date) => {
+      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    };
+
+    const text = encodeURIComponent(
+      `${lang === 'UA' ? 'Візит RehabLine' : 'RehabLine appointment'}: ${preparedAppointment.serviceName}`
+    );
+
+    const details = encodeURIComponent(
+      `${lang === 'UA' ? 'Спеціаліст' : 'Specialist'}: ${preparedAppointment.specialistName}`
+    );
+
+    const mapLocation = encodeURIComponent(
+      `${preparedAppointment.locationName} ${preparedAppointment.locationAddress}`.trim()
+    );
+
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${formatForGoogle(start)}/${formatForGoogle(end)}&details=${details}&location=${mapLocation}`;
   };
 
-  // Перевірка, чи запис у майбутньому (можна змінювати)
-  const isFuture = () => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const appDate = new Date(appointment.date);
-    return appDate >= today;
-  };
+  const handleCancel = async () => {
+    if (!preparedAppointment) return;
 
-  const handleCancel = () => {
-    if (window.confirm(lang === 'UA' ? 'Скасувати запис?' : 'Cancel appointment?')) {
-      // Тут має бути API-виклик
+    const confirmed = window.confirm(
+      lang === 'UA' ? 'Скасувати запис?' : 'Cancel appointment?'
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setCancelling(true);
+
+      const { error } = await supabase
+        .from('appointments')
+        .update({
+          status: 'cancelled',
+        })
+        .eq('id', preparedAppointment.id)
+        .eq('client_id', user.id);
+
+      if (error) throw error;
+
+      setAppointment((prev) => ({
+        ...prev,
+        status: 'cancelled',
+      }));
+
       alert(lang === 'UA' ? 'Запис скасовано' : 'Appointment cancelled');
-      navigate('/client/records');
+    } catch (error) {
+      console.error('Cancel appointment failed:', error);
+
+      alert(
+        lang === 'UA'
+          ? 'Не вдалося скасувати запис'
+          : 'Failed to cancel appointment'
+      );
+    } finally {
+      setCancelling(false);
     }
   };
 
   const handleReschedule = () => {
-    // Тут можна відкрити модалку з календарем, але для демо просто перейдемо на BookingWizard з параметрами
-    navigate(`/booking?specialist=${appointment.specialistId}&service=${appointment.serviceId}&date=${appointment.date}&time=${appointment.time}`);
+    if (!preparedAppointment) return;
+
+    navigate(
+      `/booking?specialist=${preparedAppointment.specialist_id}&service=${preparedAppointment.service_id}&location=${preparedAppointment.location_id}`
+    );
   };
 
-  if (!appointment) return <div className="loading">{lang === 'UA' ? 'Завантаження...' : 'Loading...'}</div>;
+  if (loading) {
+    return (
+      <div className="record-detail">
+        <h1 className="dashboard-title">
+          {lang === 'UA' ? 'Деталі запису' : 'Appointment details'}
+        </h1>
+
+        <div className="empty-state">
+          <p>{lang === 'UA' ? 'Завантаження...' : 'Loading...'}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (pageError || !preparedAppointment) {
+    return (
+      <div className="record-detail">
+        <h1 className="dashboard-title">
+          {lang === 'UA' ? 'Деталі запису' : 'Appointment details'}
+        </h1>
+
+        <div className="empty-state">
+          <p>
+            {pageError ||
+              (lang === 'UA' ? 'Запис не знайдено' : 'Appointment not found')}
+          </p>
+
+          <Link to="/client/records" className="btn-primary">
+            {lang === 'UA' ? 'До моїх записів' : 'Back to my records'}
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const canEdit =
+    preparedAppointment.status !== 'cancelled' &&
+    preparedAppointment.status !== 'canceled' &&
+    preparedAppointment.status !== 'completed' &&
+    isFuture();
 
   return (
     <div className="record-detail">
@@ -77,74 +290,94 @@ const RecordDetail = () => {
 
       <div className="record-card">
         <div className="record-status">
-          <span className={`status-badge status-${appointment.status}`}>
-            {appointment.status === 'confirmed' && (lang === 'UA' ? 'Підтверджено' : 'Confirmed')}
-            {appointment.status === 'pending' && (lang === 'UA' ? 'Очікує' : 'Pending')}
-            {appointment.status === 'cancelled' && (lang === 'UA' ? 'Скасовано' : 'Cancelled')}
-            {appointment.status === 'completed' && (lang === 'UA' ? 'Завершено' : 'Completed')}
+          <span className={`status-badge status-${normalizeStatusClass(preparedAppointment.status)}`}>
+            {getStatusLabel(preparedAppointment.status, lang)}
           </span>
         </div>
 
         <div className="record-info-grid">
           <div className="info-row">
-            <span className="info-label">{lang === 'UA' ? 'Послуга' : 'Service'}:</span>
-            <span className="info-value">{appointment.serviceName}</span>
+            <span className="info-label">
+              {lang === 'UA' ? 'Номер запису' : 'Appointment ID'}:
+            </span>
+            <span className="info-value">#{preparedAppointment.id}</span>
           </div>
+
           <div className="info-row">
-            <span className="info-label">{lang === 'UA' ? 'Дата та час' : 'Date & time'}:</span>
-            <span className="info-value">{appointment.date} • {appointment.time}</span>
+            <span className="info-label">
+              {lang === 'UA' ? 'Послуга' : 'Service'}:
+            </span>
+            <span className="info-value">{preparedAppointment.serviceName || '—'}</span>
           </div>
+
           <div className="info-row">
-            <span className="info-label">{lang === 'UA' ? 'Локація' : 'Location'}:</span>
-            <span className="info-value">{appointment.locationName}, {appointment.locationAddress}</span>
+            <span className="info-label">
+              {lang === 'UA' ? 'Дата та час' : 'Date & time'}:
+            </span>
+            <span className="info-value">
+              {preparedAppointment.date} • {preparedAppointment.time}
+            </span>
           </div>
+
           <div className="info-row">
-            <span className="info-label">{lang === 'UA' ? 'Спеціаліст' : 'Specialist'}:</span>
-            <span className="info-value">{appointment.specialistName}</span>
+            <span className="info-label">
+              {lang === 'UA' ? 'Локація' : 'Location'}:
+            </span>
+            <span className="info-value">
+              {preparedAppointment.locationName || '—'}
+              {preparedAppointment.locationAddress
+                ? `, ${preparedAppointment.locationAddress}`
+                : ''}
+            </span>
           </div>
+
           <div className="info-row">
-            <span className="info-label">{lang === 'UA' ? 'Ваш коментар' : 'Your notes'}:</span>
-            <span className="info-value">{appointment.clientNotes || '—'}</span>
+            <span className="info-label">
+              {lang === 'UA' ? 'Спеціаліст' : 'Specialist'}:
+            </span>
+            <span className="info-value">{preparedAppointment.specialistName || '—'}</span>
           </div>
-          {appointment.specialistNotes && (
+
+          <div className="info-row">
+            <span className="info-label">
+              {lang === 'UA' ? 'Ваш коментар' : 'Your notes'}:
+            </span>
+            <span className="info-value">{preparedAppointment.clientNotes || '—'}</span>
+          </div>
+
+          {preparedAppointment.specialistNotes && (
             <div className="info-row specialist-notes">
-              <span className="info-label">{lang === 'UA' ? 'Нотатки лікаря' : 'Doctor\'s notes'}:</span>
-              <span className="info-value">{appointment.specialistNotes}</span>
+              <span className="info-label">
+                {lang === 'UA' ? 'Нотатки спеціаліста' : "Specialist's notes"}:
+              </span>
+              <span className="info-value">{preparedAppointment.specialistNotes}</span>
             </div>
           )}
         </div>
 
-        {/* План лікування (якщо є) */}
-        {appointment.treatmentPlan && (
-          <div className="treatment-plan">
-            <h3>{lang === 'UA' ? 'План лікування' : 'Treatment plan'}</h3>
-            <div className="progress-bar">
-              <div
-                className="progress-fill"
-                style={{ width: `${(appointment.treatmentPlan.completed / appointment.treatmentPlan.total) * 100}%` }}
-              ></div>
-            </div>
-            <p>
-              {lang === 'UA' ? 'Виконано' : 'Completed'}: {appointment.treatmentPlan.completed} / {appointment.treatmentPlan.total}
-            </p>
-            <ul className="exercises-list">
-              {appointment.treatmentPlan.exercises.map((ex, idx) => (
-                <li key={idx}>{ex}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Рекомендації (рецепти) */}
-        {prescriptionsList.length > 0 && (
+        {prescriptions.length > 0 && (
           <div className="prescriptions-section">
             <h3>{lang === 'UA' ? 'Рекомендації' : 'Recommendations'}</h3>
-            {prescriptionsList.map(p => (
-              <div key={p.id} className="prescription-mini">
-                <h4>{p.title[lang]}</h4>
-                <p>{p.description[lang]}</p>
-                {p.fileUrl && (
-                  <a href={p.fileUrl} className="btn-link" download>
+
+            {prescriptions.map((prescription) => (
+              <div key={prescription.id} className="prescription-mini">
+                <h4>
+                  {lang === 'UA'
+                    ? prescription.title_ua || prescription.title || ''
+                    : prescription.title_en || prescription.title_ua || prescription.title || ''}
+                </h4>
+
+                <p>
+                  {lang === 'UA'
+                    ? prescription.description_ua || prescription.description || ''
+                    : prescription.description_en ||
+                      prescription.description_ua ||
+                      prescription.description ||
+                      ''}
+                </p>
+
+                {prescription.file_url && (
+                  <a href={prescription.file_url} className="btn-link" download>
                     {lang === 'UA' ? 'Завантажити' : 'Download'}
                   </a>
                 )}
@@ -158,24 +391,40 @@ const RecordDetail = () => {
             {lang === 'UA' ? 'Назад' : 'Back'}
           </button>
 
-          {/* Кнопки для майбутніх записів (не скасованих і не завершених) */}
-          {appointment.status !== 'cancelled' && appointment.status !== 'completed' && isFuture() && (
+          {canEdit && (
             <>
               <button className="btn-outline" onClick={handleReschedule}>
                 {lang === 'UA' ? 'Перенести' : 'Reschedule'}
               </button>
-              <button className="btn-outline" onClick={handleCancel}>
-                {lang === 'UA' ? 'Скасувати' : 'Cancel'}
+
+              <button
+                className="btn-outline"
+                onClick={handleCancel}
+                disabled={cancelling}
+              >
+                {cancelling
+                  ? lang === 'UA'
+                    ? 'Скасування...'
+                    : 'Cancelling...'
+                  : lang === 'UA'
+                    ? 'Скасувати'
+                    : 'Cancel'}
               </button>
             </>
           )}
 
-          {/* Кнопка Google Calendar (для майбутніх або підтверджених) */}
-          {appointment.status !== 'cancelled' && appointment.status !== 'completed' && (
-            <a href={getGoogleCalendarUrl()} target="_blank" rel="noopener noreferrer" className="btn-outline">
-              📅 {lang === 'UA' ? 'Google Календар' : 'Google Calendar'}
-            </a>
-          )}
+          {preparedAppointment.status !== 'cancelled' &&
+            preparedAppointment.status !== 'canceled' &&
+            preparedAppointment.status !== 'completed' && (
+              <a
+                href={getGoogleCalendarUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-outline"
+              >
+                📅 {lang === 'UA' ? 'Google Календар' : 'Google Calendar'}
+              </a>
+            )}
         </div>
       </div>
     </div>

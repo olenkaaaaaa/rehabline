@@ -1,0 +1,305 @@
+.specialists-page {
+  width: 100%;
+  min-width: 0;
+  padding: 24px 0 50px;
+}
+
+/* Прибираємо великий верхній hero/заголовок */
+.specialists-page .page-hero,
+.specialists-page .page-header,
+.specialists-hero {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+
+.specialists-page .page-header h1,
+.specialists-page .page-hero h1,
+.specialists-hero h1,
+.specialists-page h1:first-child {
+  display: none !important;
+}
+
+.specialists-page .page-header p,
+.specialists-page .page-hero p,
+.specialists-hero p {
+  display: none !important;
+}
+
+/* Фільтри підсуваємо вверх і робимо компактними */
+.specialists-filters,
+.specialist-filters,
+.filters-panel {
+  display: grid;
+  grid-template-columns: minmax(260px, 1.4fr) minmax(180px, 0.8fr) minmax(180px, 0.8fr) minmax(180px, 0.8fr);
+  gap: 14px;
+  align-items: end;
+  margin: 0 0 16px !important;
+  padding-top: 0 !important;
+}
+
+.specialists-filters .form-group,
+.specialist-filters .form-group,
+.filters-panel .form-group {
+  gap: 6px;
+}
+
+.specialists-filters label,
+.specialist-filters label,
+.filters-panel label {
+  font-size: 13px;
+  font-weight: 800;
+  color: #526273;
+}
+
+.specialists-filters input,
+.specialists-filters select,
+.specialist-filters input,
+.specialist-filters select,
+.filters-panel input,
+.filters-panel select {
+  min-height: 46px;
+  height: 46px;
+  border-radius: 15px;
+  font-size: 14px;
+}
+
+/* Кнопки фільтрів */
+.filter-actions,
+.specialists-actions {
+  display: flex;
+  gap: 10px;
+  margin: 0 0 22px !important;
+}
+
+.filter-actions button,
+.specialists-actions button,
+.filter-actions .btn,
+.specialists-actions .btn {
+  min-height: 44px;
+  height: 44px;
+  padding: 0 20px;
+  border-radius: 15px;
+  font-size: 14px;
+}
+
+/* Сітка спеціалістів */
+.specialists-grid,
+.doctors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 18px;
+}
+
+/* Картка спеціаліста компактна */
+.specialist-card,
+.doctor-card {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 16px;
+  min-height: auto !important;
+  padding: 18px !important;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid #e3edf2;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+  overflow: visible !important;
+  transition: 0.2s ease;
+}
+
+.specialist-card:hover,
+.doctor-card:hover {
+  transform: translateY(-2px);
+  border-color: #22bfc2;
+}
+
+/* Фото маленьке біля тексту */
+.specialist-photo,
+.specialist-card-image,
+.specialist-image,
+.doctor-card img,
+.specialist-card img {
+  width: 86px !important;
+  height: 86px !important;
+  min-width: 86px !important;
+  min-height: 86px !important;
+  max-width: 86px !important;
+  max-height: 86px !important;
+  border-radius: 22px;
+  object-fit: cover;
+  overflow: hidden;
+  background: #edf7f8;
+  flex-shrink: 0;
+  display: block;
+}
+
+/* Якщо хочеш кружечком — заміни 22px на 50% тут:
+.specialist-photo,
+.specialist-card-image,
+.specialist-image,
+.doctor-card img,
+.specialist-card img {
+  border-radius: 50%;
+}
+*/
+
+/* Placeholder фото */
+.specialist-photo-placeholder,
+.specialist-avatar-placeholder {
+  width: 86px !important;
+  height: 86px !important;
+  min-width: 86px !important;
+  min-height: 86px !important;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #e8f8f9, #edf4ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #087783;
+  font-size: 28px;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+/* Текст картки */
+.specialist-card-content,
+.specialist-info,
+.doctor-card > div {
+  min-width: 0;
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: 1;
+}
+
+.specialist-card h3,
+.specialist-info h3,
+.doctor-card h3 {
+  margin: 0;
+  font-size: 21px;
+  line-height: 1.15;
+  font-weight: 900;
+  color: #08253d;
+}
+
+.specialist-card p,
+.specialist-info p,
+.doctor-card p {
+  margin: 0;
+  color: #657487;
+  line-height: 1.45;
+  font-size: 14px;
+}
+
+.specialist-specialty,
+.specialist-category {
+  color: #087783 !important;
+  font-weight: 800;
+}
+
+.specialist-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 4px;
+}
+
+.specialist-meta span,
+.specialist-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #f1f8fa;
+  color: #526273;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* Кнопка в картці */
+.specialist-card .btn,
+.specialist-info .btn,
+.specialist-card a.btn,
+.doctor-card .btn,
+.doctor-card a.btn {
+  margin-top: 8px;
+  width: fit-content;
+  min-height: 38px;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 13px;
+  font-size: 13px;
+}
+
+/* Щоб кривий alt-текст не вилазив над карткою */
+.specialist-card img:not([src]),
+.doctor-card img:not([src]) {
+  display: none;
+}
+
+/* Адаптив */
+@media (max-width: 1180px) {
+  .specialists-filters,
+  .specialist-filters,
+  .filters-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .specialists-grid,
+  .doctors-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .specialists-page {
+    padding-top: 16px;
+  }
+
+  .specialists-filters,
+  .specialist-filters,
+  .filters-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-actions,
+  .specialists-actions {
+    flex-direction: column;
+  }
+
+  .filter-actions button,
+  .specialists-actions button {
+    width: 100%;
+  }
+
+  .specialists-grid,
+  .doctors-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .specialist-card,
+  .doctor-card {
+    padding: 16px !important;
+  }
+
+  .specialist-photo,
+  .specialist-card-image,
+  .specialist-image,
+  .doctor-card img,
+  .specialist-card img,
+  .specialist-photo-placeholder,
+  .specialist-avatar-placeholder {
+    width: 74px !important;
+    height: 74px !important;
+    min-width: 74px !important;
+    min-height: 74px !important;
+  }
+
+  .specialist-card h3,
+  .specialist-info h3,
+  .doctor-card h3 {
+    font-size: 19px;
+  }
+}

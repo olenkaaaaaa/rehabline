@@ -1,224 +1,442 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { appointments, services, specialists, locations, reviews as mockReviews } from '../../data/mockData';
-import ReviewModal from '../../components/ReviewModal';
-import PostVisitSurvey from '../../components/PostVisitSurvey';
+import { supabase } from '../../supabaseClient';
+import '../../styles/pages/client-records.css';
+
+const getServiceName = (service, lang) => {
+  return lang === 'UA'
+    ? service?.name_ua || service?.name || ''
+    : service?.name_en || service?.name_ua || service?.name || '';
+};
+
+const getLocationName = (location, lang) => {
+  return lang === 'UA'
+    ? location?.name_ua || location?.name || ''
+    : location?.name_en || location?.name_ua || location?.name || '';
+};
+
+const getStatusLabel = (status, lang) => {
+  const labels = {
+    pending: {
+      UA: 'Очікує',
+      EN: 'Pending',
+    },
+    confirmed: {
+      UA: 'Підтверджено',
+      EN: 'Confirmed',
+    },
+    cancelled: {
+      UA: 'Скасовано',
+      EN: 'Cancelled',
+    },
+    canceled: {
+      UA: 'Скасовано',
+      EN: 'Cancelled',
+    },
+    completed: {
+      UA: 'Завершено',
+      EN: 'Completed',
+    },
+  };
+
+  return labels[status]?.[lang] || status;
+};
+
+const normalizeStatusClass = (status) => {
+  if (status === 'canceled') return 'cancelled';
+  return status || 'pending';
+};
 
 const MyRecords = () => {
   const { lang } = useLanguage();
   const { user } = useAuth();
-  const clientId = user?.id || 1;
+
+  const [appointments, setAppointments] = useState([]);
+  const [services, setServices] = useState([]);
+  const [specialists, setSpecialists] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [reviews, setReviews] = useState([]);
 
   const [filterMonth, setFilterMonth] = useState('');
-  const [showReviewModal, setShowReviewModal] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
-  const [reviews, setReviews] = useState(mockReviews);
-  const [showSurvey, setShowSurvey] = useState(false);
-  const [surveyAppointment, setSurveyAppointment] = useState(null);
+  const [filterStatus, setFilterStatus] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [pageError, setPageError] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadRecords = async () => {
+      if (!user?.id) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setPageError('');
+
+        const [
+          appointmentsResponse,
+          servicesResponse,
+          specialistsResponse,
+          locationsResponse,
+          reviewsResponse,
+        ] = await Promise.all([
+          supabase
+            .from('appointments')
+            .select('*')
+            .eq('client_id', user.id)
+            .order('appointment_date', { ascending: false })
+            .order('appointment_time', { ascending: false }),
+
+          supabase
+            .from('services')
+            .select('*'),
+
+          supabase
+            .from('specialists')
+            .select('*'),
+
+          supabase
+            .from('locations')
+            .select('*'),
+
+          supabase
+            .from('reviews')
+            .select('*')
+            .eq('client_id', user.id),
+        ]);
+
+        if (appointmentsResponse.error) throw appointmentsResponse.error;
+        if (servicesResponse.error) throw servicesResponse.error;
+        if (specialistsResponse.error) throw specialistsResponse.error;
+        if (locationsResponse.error) throw locationsResponse.error;
+
+        if (reviewsResponse.error) {
+          console.warn('Reviews loading failed:', reviewsResponse.error);
+        }
+
+        if (!isMounted) return;
+
+        setAppointments(appointmentsResponse.data || []);
+        setServices(servicesResponse.data || []);
+        setSpecialists(specialistsResponse.data || []);
+        setLocations(locationsResponse.data || []);
+        setReviews(reviewsResponse.data || []);
+      } catch (error) {
+        console.error('My records loading failed:', error);
+
+        if (!isMounted) return;
+
+        setPageError(
+          lang === 'UA'
+            ? 'Не вдалося завантажити ваші записи'
+            : 'Failed to load your appointments'
+        );
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadRecords();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user, lang]);
 
   const enrichedAppointments = useMemo(() => {
-    return appointments
-      .filter(app => app.clientId === clientId)
-      .map(app => {
-        const service = services.find(s => s.id === app.serviceId);
-        const specialist = specialists.find(s => s.id === app.specialistId);
-        const location = locations.find(l => l.id === app.locationId);
-        return {
-          ...app,
-          serviceName: service?.name[lang] || '',
-          specialistName: specialist?.name || '',
-          locationName: location?.name[lang] || '',
-          duration: service?.duration || 60, // для календаря
-        };
-      })
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
-  }, [clientId, lang]);
+    return appointments.map((appointment) => {
+      const service = services.find((item) => item.id === appointment.service_id);
+      const specialist = specialists.find((item) => item.id === appointment.specialist_id);
+      const location = locations.find((item) => item.id === appointment.location_id);
 
-  const filteredAppointments = filterMonth
-    ? enrichedAppointments.filter(app => app.date.startsWith(filterMonth))
-    : enrichedAppointments;
+      return {
+        ...appointment,
+        date: appointment.appointment_date,
+        time: String(appointment.appointment_time || '').slice(0, 5),
+        service,
+        specialist,
+        location,
+        serviceName: getServiceName(service, lang),
+        specialistName: specialist?.name || '',
+        locationName: getLocationName(location, lang),
+        duration: service?.duration_minutes || 45,
+      };
+    });
+  }, [appointments, services, specialists, locations, lang]);
 
   const months = useMemo(() => {
-    const set = new Set(enrichedAppointments.map(app => app.date.slice(0, 7)));
-    return Array.from(set).sort().reverse();
-  }, [enrichedAppointments]);
-
-  // Перевірка на нещодавно завершені запити для опитування
-  useEffect(() => {
-    const completedWithoutSurvey = enrichedAppointments.filter(
-      app => app.status === 'completed' && !localStorage.getItem(`survey_${app.id}`)
+    const uniqueMonths = new Set(
+      enrichedAppointments
+        .map((appointment) => appointment.date?.slice(0, 7))
+        .filter(Boolean)
     );
-    if (completedWithoutSurvey.length > 0) {
-      setSurveyAppointment(completedWithoutSurvey[0]);
-      setShowSurvey(true);
-    }
+
+    return Array.from(uniqueMonths).sort().reverse();
   }, [enrichedAppointments]);
 
-  // Функція для створення посилання на Google Calendar
+  const filteredAppointments = useMemo(() => {
+    return enrichedAppointments.filter((appointment) => {
+      const matchesMonth = !filterMonth || appointment.date?.startsWith(filterMonth);
+      const matchesStatus = !filterStatus || appointment.status === filterStatus;
+
+      return matchesMonth && matchesStatus;
+    });
+  }, [enrichedAppointments, filterMonth, filterStatus]);
+
   const getGoogleCalendarUrl = (appointment) => {
     const start = new Date(`${appointment.date}T${appointment.time}:00`);
-    const durationMinutes = parseInt(appointment.duration) || 60;
-    const end = new Date(start.getTime() + durationMinutes * 60000);
-    const formatDate = (date) => date.toISOString().replace(/-|:|\.\d+/g, '');
-    const params = new URLSearchParams({
-      action: 'TEMPLATE',
-      text: appointment.serviceName,
-      details: `Запис до ${appointment.specialistName}`,
-      location: appointment.locationName,
-      dates: `${formatDate(start)}/${formatDate(end)}`,
-    });
-    return `https://www.google.com/calendar/render?${params.toString()}`;
+    const end = new Date(start);
+
+    end.setMinutes(end.getMinutes() + Number(appointment.duration || 45));
+
+    const formatForGoogle = (date) => {
+      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    };
+
+    const text = encodeURIComponent(
+      `${lang === 'UA' ? 'Візит RehabLine' : 'RehabLine appointment'}: ${appointment.serviceName}`
+    );
+
+    const details = encodeURIComponent(
+      `${lang === 'UA' ? 'Спеціаліст' : 'Specialist'}: ${appointment.specialistName}`
+    );
+
+    const location = encodeURIComponent(appointment.locationName || '');
+
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${formatForGoogle(start)}/${formatForGoogle(end)}&details=${details}&location=${location}`;
   };
 
-  // Експорт ICS
   const exportICS = () => {
+    if (filteredAppointments.length === 0) {
+      alert(lang === 'UA' ? 'Немає записів для експорту' : 'No appointments to export');
+      return;
+    }
+
     let icsContent = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//RehabLine//EN\n';
-    filteredAppointments.forEach(app => {
-      const dateStr = app.date.replace(/-/g, '');
-      const start = `${dateStr}T${app.time.replace(':', '')}00`;
-      const durationMinutes = parseInt(app.duration) || 60;
-      const endTime = new Date(`1970-01-01T${app.time}:00`);
-      endTime.setMinutes(endTime.getMinutes() + durationMinutes);
-      const endHour = endTime.getHours().toString().padStart(2, '0');
-      const endMin = endTime.getMinutes().toString().padStart(2, '0');
+
+    filteredAppointments.forEach((appointment) => {
+      const dateStr = appointment.date.replace(/-/g, '');
+      const start = `${dateStr}T${appointment.time.replace(':', '')}00`;
+
+      const endDate = new Date(`1970-01-01T${appointment.time}:00`);
+      endDate.setMinutes(endDate.getMinutes() + Number(appointment.duration || 45));
+
+      const endHour = String(endDate.getHours()).padStart(2, '0');
+      const endMin = String(endDate.getMinutes()).padStart(2, '0');
       const end = `${dateStr}T${endHour}${endMin}00`;
-      icsContent += `BEGIN:VEVENT\nUID:${app.id}@rehabline\nDTSTART:${start}\nDTEND:${end}\nSUMMARY:${app.serviceName}\nLOCATION:${app.locationName}\nEND:VEVENT\n`;
+
+      icsContent += `BEGIN:VEVENT\nUID:${appointment.id}@rehabline\nDTSTART:${start}\nDTEND:${end}\nSUMMARY:${appointment.serviceName}\nLOCATION:${appointment.locationName}\nDESCRIPTION:Specialist: ${appointment.specialistName}\nEND:VEVENT\n`;
     });
+
     icsContent += 'END:VCALENDAR';
+
     const blob = new Blob([icsContent], { type: 'text/calendar' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'appointments.ics';
-    a.click();
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.download = 'rehabline-appointments.ics';
+    link.click();
+
     URL.revokeObjectURL(url);
   };
 
-  const openReviewModal = (appointment) => {
-    setSelectedAppointment(appointment);
-    setShowReviewModal(true);
+  const cancelAppointment = async (appointmentId) => {
+    const confirmed = window.confirm(
+      lang === 'UA'
+        ? 'Ви точно хочете скасувати цей запис?'
+        : 'Are you sure you want to cancel this appointment?'
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const { error } = await supabase
+        .from('appointments')
+        .update({
+          status: 'cancelled',
+        })
+        .eq('id', appointmentId)
+        .eq('client_id', user.id);
+
+      if (error) throw error;
+
+      setAppointments((prev) =>
+        prev.map((appointment) =>
+          appointment.id === appointmentId
+            ? {
+                ...appointment,
+                status: 'cancelled',
+              }
+            : appointment
+        )
+      );
+    } catch (error) {
+      console.error('Cancel appointment failed:', error);
+
+      alert(
+        lang === 'UA'
+          ? 'Не вдалося скасувати запис'
+          : 'Failed to cancel appointment'
+      );
+    }
   };
 
-  const submitReview = (reviewData) => {
-    const newReview = {
-      id: reviews.length + 1,
-      clientId: clientId,
-      specialistId: selectedAppointment.specialistId,
-      appointmentId: selectedAppointment.id,
-      rating: reviewData.rating,
-      comment: reviewData.comment,
-      isAnonymous: reviewData.isAnonymous,
-      date: new Date().toISOString().split('T')[0],
-      clientName: reviewData.isAnonymous ? 'Анонім' : user?.name || 'Клієнт',
-    };
-    setReviews([...reviews, newReview]);
-    console.log('Review submitted:', newReview);
-  };
+  if (loading) {
+    return (
+      <div className="my-records">
+        <h1 className="dashboard-title">
+          {lang === 'UA' ? 'Мої записи' : 'My Records'}
+        </h1>
 
-  const handleSurveySubmit = (data) => {
-    console.log('Survey submitted:', data);
-    localStorage.setItem(`survey_${data.appointmentId}`, 'done');
-    setShowSurvey(false);
-  };
+        <div className="empty-state">
+          <p>{lang === 'UA' ? 'Завантаження записів...' : 'Loading appointments...'}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="my-records">
       <div className="records-header">
-        <h1 className="dashboard-title">{lang === 'UA' ? 'Мої записи' : 'My Records'}</h1>
+        <h1 className="dashboard-title">
+          {lang === 'UA' ? 'Мої записи' : 'My Records'}
+        </h1>
+
         <div className="records-actions">
           <select value={filterMonth} onChange={(e) => setFilterMonth(e.target.value)}>
-            <option value="">{lang === 'UA' ? 'Усі' : 'All'}</option>
-            {months.map(m => (
-              <option key={m} value={m}>
-                {new Date(m + '-01').toLocaleDateString(lang === 'UA' ? 'uk-UA' : 'en-US', { year: 'numeric', month: 'long' })}
+            <option value="">{lang === 'UA' ? 'Усі місяці' : 'All months'}</option>
+
+            {months.map((month) => (
+              <option key={month} value={month}>
+                {new Date(`${month}-01`).toLocaleDateString(
+                  lang === 'UA' ? 'uk-UA' : 'en-US',
+                  {
+                    year: 'numeric',
+                    month: 'long',
+                  }
+                )}
               </option>
             ))}
           </select>
+
+          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+            <option value="">{lang === 'UA' ? 'Усі статуси' : 'All statuses'}</option>
+            <option value="pending">{lang === 'UA' ? 'Очікує' : 'Pending'}</option>
+            <option value="confirmed">{lang === 'UA' ? 'Підтверджено' : 'Confirmed'}</option>
+            <option value="completed">{lang === 'UA' ? 'Завершено' : 'Completed'}</option>
+            <option value="cancelled">{lang === 'UA' ? 'Скасовано' : 'Cancelled'}</option>
+          </select>
+
           <button className="btn-outline" onClick={exportICS}>
             {lang === 'UA' ? 'Експорт ICS' : 'Export ICS'}
           </button>
         </div>
       </div>
 
-      <table className="appointments-table">
-        <thead>
-          <tr>
-            <th>{lang === 'UA' ? 'Дата' : 'Date'}</th>
-            <th>{lang === 'UA' ? 'Час' : 'Time'}</th>
-            <th>{lang === 'UA' ? 'Послуга' : 'Service'}</th>
-            <th>{lang === 'UA' ? 'Спеціаліст' : 'Specialist'}</th>
-            <th>{lang === 'UA' ? 'Локація' : 'Location'}</th>
-            <th>{lang === 'UA' ? 'Статус' : 'Status'}</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredAppointments.map(app => {
-            const hasReview = reviews.some(r => r.appointmentId === app.id);
-            return (
-              <tr key={app.id}>
-                <td>{app.date}</td>
-                <td>{app.time}</td>
-                <td>{app.serviceName}</td>
-                <td>{app.specialistName}</td>
-                <td>{app.locationName}</td>
-                <td>
-                  <span className={`status-badge status-${app.status}`}>
-                    {app.status === 'confirmed' && (lang === 'UA' ? 'Підтверджено' : 'Confirmed')}
-                    {app.status === 'pending' && (lang === 'UA' ? 'Очікує' : 'Pending')}
-                    {app.status === 'cancelled' && (lang === 'UA' ? 'Скасовано' : 'Cancelled')}
-                    {app.status === 'completed' && (lang === 'UA' ? 'Завершено' : 'Completed')}
-                  </span>
-                </td>
-                <td>
-                  <Link to={`/client/records/${app.id}`} className="btn-link">
-                    {lang === 'UA' ? 'Деталі' : 'Details'}
-                  </Link>
-                  {app.status === 'completed' && !hasReview && (
-                    <button onClick={() => openReviewModal(app)} className="btn-link" style={{ marginLeft: '10px' }}>
-                      {lang === 'UA' ? 'Відгук' : 'Review'}
-                    </button>
-                  )}
-                  {/* Кнопка Google Calendar для майбутніх записів */}
-                  {app.status !== 'cancelled' && app.status !== 'completed' && (
-                    <a
-                      href={getGoogleCalendarUrl(app)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-link"
-                      style={{ marginLeft: '10px' }}
-                    >
-                      📅 Google
-                    </a>
-                  )}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-
-      {filteredAppointments.length === 0 && (
-        <p className="no-data">{lang === 'UA' ? 'Немає записів' : 'No appointments'}</p>
+      {pageError && (
+        <div className="empty-state">
+          <p>{pageError}</p>
+        </div>
       )}
 
-      {selectedAppointment && (
-        <ReviewModal
-          isOpen={showReviewModal}
-          onClose={() => setShowReviewModal(false)}
-          appointment={selectedAppointment}
-          onSubmit={submitReview}
-        />
-      )}
+      {filteredAppointments.length > 0 ? (
+        <table className="appointments-table">
+          <thead>
+            <tr>
+              <th>{lang === 'UA' ? 'Дата' : 'Date'}</th>
+              <th>{lang === 'UA' ? 'Час' : 'Time'}</th>
+              <th>{lang === 'UA' ? 'Послуга' : 'Service'}</th>
+              <th>{lang === 'UA' ? 'Спеціаліст' : 'Specialist'}</th>
+              <th>{lang === 'UA' ? 'Локація' : 'Location'}</th>
+              <th>{lang === 'UA' ? 'Статус' : 'Status'}</th>
+              <th>{lang === 'UA' ? 'Дії' : 'Actions'}</th>
+            </tr>
+          </thead>
 
-      {showSurvey && surveyAppointment && (
-        <PostVisitSurvey
-          appointment={surveyAppointment}
-          onClose={() => setShowSurvey(false)}
-          onSubmit={handleSurveySubmit}
-        />
+          <tbody>
+            {filteredAppointments.map((appointment) => {
+              const hasReview = reviews.some(
+                (review) =>
+                  review.appointment_id === appointment.id ||
+                  review.appointmentId === appointment.id
+              );
+
+              const canCancel =
+                appointment.status === 'pending' || appointment.status === 'confirmed';
+
+              const canReview = appointment.status === 'completed' && !hasReview;
+
+              return (
+                <tr key={appointment.id}>
+                  <td>{appointment.date}</td>
+                  <td>{appointment.time}</td>
+                  <td>{appointment.serviceName || '—'}</td>
+                  <td>{appointment.specialistName || '—'}</td>
+                  <td>{appointment.locationName || '—'}</td>
+                  <td>
+                    <span className={`status-badge status-${normalizeStatusClass(appointment.status)}`}>
+                      {getStatusLabel(appointment.status, lang)}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="table-actions">
+                      <Link to={`/client/records/${appointment.id}`} className="btn-link">
+                        {lang === 'UA' ? 'Деталі' : 'Details'}
+                      </Link>
+
+                      {canCancel && (
+                        <button
+                          type="button"
+                          className="btn-link"
+                          onClick={() => cancelAppointment(appointment.id)}
+                        >
+                          {lang === 'UA' ? 'Скасувати' : 'Cancel'}
+                        </button>
+                      )}
+
+                      {appointment.status !== 'cancelled' &&
+                        appointment.status !== 'canceled' &&
+                        appointment.status !== 'completed' && (
+                          <a
+                            href={getGoogleCalendarUrl(appointment)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn-link"
+                          >
+                            📅 Google
+                          </a>
+                        )}
+
+                      {canReview && (
+                        <Link
+                          to={`/client/reviews?appointment=${appointment.id}`}
+                          className="btn-link"
+                        >
+                          {lang === 'UA' ? 'Відгук' : 'Review'}
+                        </Link>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      ) : (
+        <div className="empty-state">
+          <p>{lang === 'UA' ? 'Немає записів' : 'No appointments'}</p>
+
+          <Link to="/services" className="btn-primary">
+            {lang === 'UA' ? 'Записатись на послугу' : 'Book a service'}
+          </Link>
+        </div>
       )}
     </div>
   );

@@ -1,0 +1,32 @@
+.audit-log-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.audit-controls {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 18px;
+  align-items: end;
+}
+
+.audit-controls .form-group {
+  margin-bottom: 0;
+}
+
+.audit-table {
+  min-width: 900px;
+}
+
+.table-subtext {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 760px) {
+  .audit-controls {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,35 +1,91 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { services, locations } from '../../data/mockData';
 
-const Step5Success = ({ bookingData }) => {
+import {
+  getServiceName,
+  getSpecialistName,
+  getLocationName,
+} from './BookingWizard';
+
+const Step5Success = ({
+  bookingData,
+  appointment,
+  selectedService,
+  selectedSpecialist,
+  selectedLocation,
+}) => {
   const { lang } = useLanguage();
-  const service = services.find(s => s.id === bookingData.serviceId);
-  const location = bookingData.locationId ? locations.find(l => l.id === bookingData.locationId) : null;
 
   return (
-    <div className="step step5 success">
-      <h2>{lang === 'UA' ? 'Запис створено!' : 'Appointment created!'}</h2>
-      <p>{lang === 'UA' ? 'Ми надіслали підтвердження' : 'We have sent a confirmation'}</p>
+    <div className="booking-card success-card">
+      <div className="success-icon">✓</div>
 
-      <div className="success-details">
-        <p><strong>{lang === 'UA' ? 'Візит' : 'Visit'}:</strong> {bookingData.date} • {bookingData.time}</p>
-        <p><strong>{lang === 'UA' ? 'Послуга' : 'Service'}:</strong> {service?.name[lang]}</p>
-        <p><strong>{lang === 'UA' ? 'Локація' : 'Location'}:</strong> {location?.name[lang]}</p>
-        <p><strong>{lang === 'UA' ? 'Нагадування' : 'Reminders'}:</strong> {lang === 'UA' ? 'за 24 год та за 2 год до початку' : '24h and 2h before'}</p>
-        <p><strong>{lang === 'UA' ? 'Статус' : 'Status'}:</strong> {lang === 'UA' ? 'підтверджено' : 'confirmed'}</p>
+      <h1>
+        {lang === 'UA'
+          ? 'Запис успішно створено'
+          : 'Appointment created successfully'}
+      </h1>
+
+      <p>
+        {lang === 'UA'
+          ? 'Ваш запис очікує підтвердження. Деталі запису нижче.'
+          : 'Your appointment is waiting for confirmation. Details are below.'}
+      </p>
+
+      <div className="booking-summary">
+        {appointment?.id && (
+          <div className="summary-row">
+            <span className="summary-label">
+              {lang === 'UA' ? 'Номер запису' : 'Appointment ID'}
+            </span>
+            <span className="summary-value">#{appointment.id}</span>
+          </div>
+        )}
+
+        <div className="summary-row">
+          <span className="summary-label">
+            {lang === 'UA' ? 'Послуга' : 'Service'}
+          </span>
+          <span className="summary-value">{getServiceName(selectedService, lang)}</span>
+        </div>
+
+        <div className="summary-row">
+          <span className="summary-label">
+            {lang === 'UA' ? 'Спеціаліст' : 'Specialist'}
+          </span>
+          <span className="summary-value">{getSpecialistName(selectedSpecialist)}</span>
+        </div>
+
+        <div className="summary-row">
+          <span className="summary-label">
+            {lang === 'UA' ? 'Локація' : 'Location'}
+          </span>
+          <span className="summary-value">{getLocationName(selectedLocation, lang)}</span>
+        </div>
+
+        <div className="summary-row">
+          <span className="summary-label">
+            {lang === 'UA' ? 'Дата' : 'Date'}
+          </span>
+          <span className="summary-value">{bookingData.date}</span>
+        </div>
+
+        <div className="summary-row">
+          <span className="summary-label">
+            {lang === 'UA' ? 'Час' : 'Time'}
+          </span>
+          <span className="summary-value">{bookingData.time}</span>
+        </div>
       </div>
 
-      <div className="success-actions">
-        <Link to="/client/records" className="btn-primary">
-          {lang === 'UA' ? 'До моїх записів' : 'My appointments'}
+      <div className="booking-actions">
+        <Link to="/profile" className="btn btn-outline">
+          {lang === 'UA' ? 'Мої записи' : 'My appointments'}
         </Link>
-        <button className="btn-outline" onClick={() => window.open('/api/ics', '_blank')}>
-          {lang === 'UA' ? 'Додати в календар' : 'Add to calendar'}
-        </button>
-        <Link to="/" className="btn-link">
-          {lang === 'UA' ? 'На головну' : 'Home'}
+
+        <Link to="/" className="btn btn-primary">
+          {lang === 'UA' ? 'На головну' : 'Go home'}
         </Link>
       </div>
     </div>

@@ -1,37 +1,50 @@
 import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
+import DashboardShell from '../../components/DashboardShell';
 
 const SpecialistDashboard = () => {
   const { lang } = useLanguage();
 
   const menuItems = [
-    { path: '/specialist', label: { UA: 'Мій розклад', EN: 'My Schedule' } },
-    { path: '/specialist/appointments', label: { UA: 'Записи', EN: 'Appointments' } },
-    { path: '/specialist/clients', label: { UA: 'Клієнти', EN: 'Clients' } },
-    { path: '/specialist/schedule-settings', label: { UA: 'Налаштування графіка', EN: 'Schedule Settings' } },
+    {
+      path: '/specialist',
+      label: { UA: 'Огляд', EN: 'Overview' },
+      icon: '📊',
+      end: true,
+    },
+    {
+      path: '/specialist/appointments',
+      label: { UA: 'Записи', EN: 'Appointments' },
+      icon: '📅',
+    },
+    {
+      path: '/specialist/clients',
+      label: { UA: 'Клієнти', EN: 'Clients' },
+      icon: '👥',
+    },
+    {
+      path: '/specialist/schedule-settings',
+      label: { UA: 'Графік роботи', EN: 'Schedule settings' },
+      icon: '🕘',
+    },
+    {
+      path: '/specialist/profile',
+      label: { UA: 'Мій профіль', EN: 'My profile' },
+      icon: '👤',
+    },
   ];
 
   return (
-    <div className="dashboard-layout">
-      <aside className="dashboard-sidebar">
-        <nav className="sidebar-nav">
-          {menuItems.map(item => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              end={item.path === '/specialist'}
-              className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
-            >
-              {item.label[lang]}
-            </NavLink>
-          ))}
-        </nav>
-      </aside>
-      <main className="dashboard-content">
-        <Outlet />
-      </main>
-    </div>
+    <DashboardShell
+      role="specialist"
+      title={lang === 'UA' ? 'Кабінет спеціаліста' : 'Specialist panel'}
+      subtitle={
+        lang === 'UA'
+          ? 'Робоча панель лікаря, записи, клієнти та графік'
+          : 'Doctor workspace for appointments, clients and schedule'
+      }
+      menuItems={menuItems}
+    />
   );
 };
 

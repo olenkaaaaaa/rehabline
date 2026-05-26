@@ -1,0 +1,50 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(3, 15, 28, 0.55);
+
+  backdrop-filter: blur(4px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 999;
+}
+
+.modal {
+  width: min(680px, 92vw);
+
+  background: white;
+
+  border-radius: var(--radius-xl);
+
+  padding: 32px;
+
+  box-shadow: var(--shadow-lg);
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.rating {
+  display: flex;
+  gap: 8px;
+  margin: 18px 0 24px;
+}
+
+.rating-star {
+  font-size: 30px;
+  color: #d8e1e6;
+  transition: var(--transition);
+}
+
+.rating-star:hover,
+.rating-star.active {
+  color: #f5a524;
+  transform: translateY(-2px);
+}

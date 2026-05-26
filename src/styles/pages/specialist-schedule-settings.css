@@ -1,0 +1,426 @@
+.specialist-page {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* головний layout сторінки */
+.specialist-page > .dashboard-grid-2,
+.specialist-page .dashboard-grid.dashboard-grid-2 {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(420px, 0.85fr);
+  gap: 28px;
+  align-items: start;
+  width: 100%;
+  min-width: 0;
+}
+
+/* права колонка з формами */
+.specialist-page > .dashboard-grid-2 > .dashboard-grid,
+.specialist-page .dashboard-grid.dashboard-grid-2 > .dashboard-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+}
+
+/* базові картки */
+.specialist-page .card {
+  width: 100%;
+  min-width: 0;
+  padding: 30px;
+  border-radius: 30px;
+  background: #ffffff;
+  border: 1px solid #e3edf2;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+  overflow: hidden;
+}
+
+.specialist-page .section-heading {
+  margin-bottom: 24px;
+}
+
+.specialist-page .section-heading h2 {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.15;
+  font-weight: 900;
+  color: #08253d;
+  letter-spacing: -0.03em;
+}
+
+.specialist-page .section-heading p {
+  margin-top: 8px;
+  color: #657487;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+/* поточний графік */
+.schedule-days {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  min-width: 0;
+}
+
+.schedule-day-card {
+  width: 100%;
+  min-width: 0;
+  padding: 24px;
+  border-radius: 26px;
+  border: 1px solid #e3edf2;
+  background: #f8fcfd;
+}
+
+.schedule-day-card h3 {
+  margin: 0 0 16px;
+  font-size: 26px;
+  line-height: 1.15;
+  color: #08253d;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.schedule-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid #e3edf2;
+}
+
+.schedule-slot:last-child {
+  margin-bottom: 0;
+}
+
+.schedule-slot div {
+  font-size: 24px;
+  line-height: 1.15;
+  font-weight: 900;
+  color: #08253d;
+}
+
+.schedule-slot small {
+  color: #657487;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.muted-text {
+  color: #657487;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* форми */
+.specialist-page .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 16px;
+  min-width: 0;
+}
+
+.specialist-page .form-group label {
+  font-size: 14px;
+  font-weight: 900;
+  color: #10233b;
+}
+
+.specialist-page input,
+.specialist-page select,
+.specialist-page textarea {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 52px;
+  border-radius: 17px;
+  border: 1px solid #d7e4ea;
+  background: #ffffff;
+  padding: 0 16px;
+  font-size: 15px;
+  color: #10233b;
+  outline: none;
+}
+
+.specialist-page textarea {
+  min-height: 118px;
+  padding-top: 14px;
+  resize: vertical;
+}
+
+.specialist-page input:focus,
+.specialist-page select:focus,
+.specialist-page textarea:focus {
+  border-color: #22bfc2;
+}
+
+/* два поля в ряд */
+.specialist-page .form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  width: 100%;
+  min-width: 0;
+}
+
+.specialist-page .form-row .form-group {
+  margin-bottom: 16px;
+}
+
+/* кнопки */
+.specialist-page .btn,
+.specialist-page .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  padding: 0 24px;
+  border-radius: 16px;
+  border: 1px solid #22bfc2;
+  background: #22bfc2;
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.specialist-page .btn:hover,
+.specialist-page .btn-primary:hover {
+  transform: translateY(-1px);
+}
+
+.specialist-page .btn:disabled,
+.specialist-page .btn-primary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* прибираємо можливі конфлікти старих стилів */
+.specialist-page .dashboard-grid {
+  min-width: 0;
+}
+
+.specialist-page .dashboard-grid > * {
+  min-width: 0;
+}
+
+.specialist-page .card + .card {
+  margin-top: 0;
+}
+
+/* адаптив */
+@media (max-width: 1450px) {
+  .specialist-page > .dashboard-grid-2,
+  .specialist-page .dashboard-grid.dashboard-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .specialist-page .card {
+    padding: 22px;
+    border-radius: 24px;
+  }
+
+  .schedule-day-card {
+    padding: 20px;
+    border-radius: 22px;
+  }
+
+  .schedule-day-card h3 {
+    font-size: 23px;
+  }
+
+  .schedule-slot div {
+    font-size: 20px;
+  }
+
+  .specialist-page .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .specialist-page .btn,
+  .specialist-page .btn-primary {
+    width: 100%;
+  }
+}
+.schedule-slot {
+  position: relative;
+}
+
+.schedule-slot-top {
+  width: 100%;
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.schedule-slot-time {
+  min-width: 0;
+  color: #08253d;
+  font-size: 24px;
+  line-height: 1.15;
+  font-weight: 900;
+}
+
+.schedule-edit-btn {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  max-width: 42px;
+  padding: 0;
+  margin: 0;
+  border-radius: 14px;
+  border: 1px solid #d7e4ea;
+  background: #ffffff;
+  color: #087783;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+  transition: 0.2s ease;
+  flex-shrink: 0;
+}
+
+.schedule-edit-btn:hover {
+  border-color: #22bfc2;
+  background: #eefafa;
+  transform: translateY(-1px);
+}
+
+.schedule-edit-btn:active {
+  transform: translateY(0);
+}
+
+.schedule-slot {
+  position: relative;
+}
+
+.schedule-slot-top {
+  width: 100%;
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.schedule-slot-time {
+  min-width: 0;
+  color: #08253d;
+  font-size: 24px;
+  line-height: 1.15;
+  font-weight: 900;
+}
+
+.schedule-edit-btn {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  max-width: 42px;
+  padding: 0;
+  margin: 0;
+  border-radius: 14px;
+  border: 1px solid #d7e4ea;
+  background: #ffffff;
+  color: #087783;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  position: relative;
+  z-index: 20;
+  pointer-events: auto;
+  transition: 0.2s ease;
+  flex-shrink: 0;
+}
+
+.schedule-edit-btn:hover {
+  border-color: #22bfc2;
+  background: #eefafa;
+  transform: translateY(-1px);
+}
+
+.schedule-edit-btn:active {
+  transform: translateY(0);
+}
+
+.schedule-day-card,
+.schedule-slot,
+.schedule-slot * {
+  pointer-events: auto;
+}
+.schedule-slot-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 20;
+}
+
+.schedule-icon-btn {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  max-width: 42px;
+  padding: 0;
+  margin: 0;
+  border-radius: 14px;
+  border: 1px solid #d7e4ea;
+  background: #ffffff;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  position: relative;
+  z-index: 20;
+  pointer-events: auto;
+  transition: 0.2s ease;
+}
+
+.schedule-edit-btn {
+  color: #087783;
+}
+
+.schedule-edit-btn:hover {
+  border-color: #22bfc2;
+  background: #eefafa;
+  transform: translateY(-1px);
+}
+
+.schedule-delete-btn {
+  color: #b42318;
+}
+
+.schedule-delete-btn:hover {
+  border-color: #f5b5ad;
+  background: #fff1f0;
+  transform: translateY(-1px);
+}
+
+.schedule-icon-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}

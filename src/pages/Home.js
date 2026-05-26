@@ -1,140 +1,330 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
-import { services, specialists, appointments } from '../data/mockData'; // імпортуємо
+import { getHomeData } from '../api/catalogApi';
+import '../styles/pages/home.css';
 
 const Home = () => {
   const { lang } = useLanguage();
 
-  // Отримуємо найближчі записи (наприклад, перші 3)
-  const nearestSlots = appointments
-    .filter(app => app.status === 'confirmed' || app.status === 'pending')
-    .slice(0, 3)
-    .map(app => {
-      const service = services.find(s => s.id === app.serviceId);
-      const specialist = specialists.find(s => s.id === app.specialistId);
-      return {
-        id: app.id,
-        date: new Date(app.date).toLocaleDateString('uk-UA', { 
-          weekday: 'long', 
-          day: 'numeric', 
-          month: 'long' 
-        }),
-        time: app.time,
-        service: service?.name[lang] || '',
-        specialist: specialist?.name || ''
-      };
-    });
+  const [popularServices, setPopularServices] = useState([]);
+  const [nearestSlots, setNearestSlots] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [pageError, setPageError] = useState('');
 
-  // Отримуємо популярні послуги (перші 3)
-  const popularServices = services.slice(0, 3);
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadHomeData = async () => {
+      try {
+        setLoading(true);
+        setPageError('');
+
+        const data = await getHomeData(lang);
+
+        if (!isMounted) return;
+
+        setPopularServices(data.popularServices || []);
+        setNearestSlots(data.nearestSlots || []);
+      } catch (error) {
+        console.error('Home data loading failed:', error);
+
+        if (!isMounted) return;
+
+        setPageError(
+          lang === 'UA'
+            ? 'Не вдалося завантажити дані'
+            : 'Failed to load data'
+        );
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadHomeData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [lang]);
 
   return (
-    <main>
-      {/* Hero секція */}
-      <section className="hero">
+    <main className="home-page">
+      <section className="hero-section">
         <div className="container">
-          <div className="hero-content">
-            <h1 className="hero-title">
-              {lang === 'UA'
-                ? 'Онлайн-запис на медичні та реабілітаційні послуги'
-                : 'Online booking for medical and rehabilitation services'}
-            </h1>
-            <p className="hero-subtitle">
-              {lang === 'UA'
-                ? 'Обирайте послугу, спеціаліста та зручний час. Підтвердження і нагадування – автоматично.'
-                : 'Choose a service, specialist and convenient time. Confirmation and reminders – automatically.'}
-            </p>
-            <Link to="/services" className="cta-btn">
-              {lang === 'UA' ? 'Записатись' : 'Book now'}
-            </Link>
-          </div>
-        </div>
-      </section>
+          <div className="hero-card">
+            <div className="hero-content">
+              <span className="hero-badge">
+                RehabLine
+              </span>
 
-      {/* Секція переваг */}
-      <section className="features">
-        <div className="container">
-          <h2 className="section-title">
-            {lang === 'UA' ? 'Чому RehabLine' : 'Why RehabLine'}
-          </h2>
-          <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-icon">📅</div>
-              <h3>{lang === 'UA' ? 'Розумний календар' : 'Smart calendar'}</h3>
-              <p>
+              <h1 className="hero-title">
                 {lang === 'UA'
-                  ? 'Показує тільки реальні вільні слоти з урахуванням тривалості та буферів.'
-                  : 'Shows only real available slots considering duration and buffers.'}
-              </p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">⚡</div>
-              <h3>{lang === 'UA' ? 'Без черг' : 'No queues'}</h3>
-              <p>
-                {lang === 'UA'
-                  ? 'Перенесення або скасування у 2 кліки, правила відміни – прозорі.'
-                  : 'Reschedule or cancel in 2 clicks, clear cancellation rules.'}
-              </p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">👥</div>
-              <h3>{lang === 'UA' ? 'Кабінети для всіх ролей' : 'Dashboards for all roles'}</h3>
-              <p>
-                {lang === 'UA'
-                  ? 'Клієнт, спеціаліст, реєстратор та адміністратор мають свої панелі.'
-                  : 'Client, specialist, registrar and admin each have their own dashboard.'}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+                  ? 'Онлайн-запис на медичні та реабілітаційні послуги'
+                  : 'Online booking for medical and rehabilitation services'}
+              </h1>
 
-      {/* Секція "Найближчі вікна" */}
-      <section className="nearest-slots">
-        <div className="container">
-          <h2 className="section-title">
-            {lang === 'UA' ? 'Найближчі вікна' : 'Nearest slots'}
-          </h2>
-          <div className="slots-grid">
-            {nearestSlots.map((slot) => (
-              <div key={slot.id} className="slot-card">
-                <div className="slot-datetime">
-                  <span className="slot-date">{slot.date}</span>
-                  <span className="slot-time">{slot.time}</span>
-                </div>
-                <div className="slot-info">
-                  <p className="slot-service">{slot.service}</p>
-                  <p className="slot-specialist">{slot.specialist}</p>
-                </div>
-                <button className="btn-outline slot-select">
-                  {lang === 'UA' ? 'Обрати' : 'Select'}
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+              <p className="hero-subtitle">
+                {lang === 'UA'
+                  ? 'Обирайте послугу, спеціаліста та зручний час. Підтвердження і нагадування — автоматично.'
+                  : 'Choose a service, specialist and convenient time. Confirmation and reminders — automatically.'}
+              </p>
 
-      {/* Секція "Популярні послуги" */}
-      <section className="popular-services">
-        <div className="container">
-          <h2 className="section-title">
-            {lang === 'UA' ? 'Популярні послуги' : 'Popular services'}
-          </h2>
-          <div className="services-grid">
-            {popularServices.map((service) => (
-              <div key={service.id} className="service-card">
-                <h3>{service.name[lang]}</h3>
-                <p className="service-duration">
-                  {service.duration} • від {service.price} грн
-                </p>
-                <p className="service-tags">{service.tags?.[lang] || service.category[lang]}</p>
-                <Link to={`/services/${service.id}`} className="btn-outline">
-                  {lang === 'UA' ? 'Деталі' : 'Details'}
+              <div className="hero-actions">
+                <Link
+                  to="/services"
+                  className="btn btn-primary"
+                >
+                  {lang === 'UA'
+                    ? 'Записатись'
+                    : 'Book now'}
+                </Link>
+
+                <Link
+                  to="/specialists"
+                  className="btn btn-secondary"
+                >
+                  {lang === 'UA'
+                    ? 'Спеціалісти'
+                    : 'Specialists'}
                 </Link>
               </div>
-            ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="page-section">
+        <div className="container">
+          <div className="page-header">
+            <h2>
+              {lang === 'UA'
+                ? 'Чому RehabLine'
+                : 'Why RehabLine'}
+            </h2>
+
+            <p>
+              {lang === 'UA'
+                ? 'Система створена для зручного онлайн-запису'
+                : 'The system is built for convenient online booking'}
+            </p>
+          </div>
+
+          <div className="dashboard-grid dashboard-grid-3">
+            <div className="card feature-card">
+              <div className="feature-icon">
+                📅
+              </div>
+
+              <h3>
+                {lang === 'UA'
+                  ? 'Розумний календар'
+                  : 'Smart calendar'}
+              </h3>
+
+              <p>
+                {lang === 'UA'
+                  ? 'Показує тільки реальні доступні слоти.'
+                  : 'Shows only real available slots.'}
+              </p>
+            </div>
+
+            <div className="card feature-card">
+              <div className="feature-icon">
+                ⚡
+              </div>
+
+              <h3>
+                {lang === 'UA'
+                  ? 'Без черг'
+                  : 'No queues'}
+              </h3>
+
+              <p>
+                {lang === 'UA'
+                  ? 'Швидкий запис до потрібного спеціаліста.'
+                  : 'Fast booking with the needed specialist.'}
+              </p>
+            </div>
+
+            <div className="card feature-card">
+              <div className="feature-icon">
+                👥
+              </div>
+
+              <h3>
+                {lang === 'UA'
+                  ? 'Панелі для всіх ролей'
+                  : 'Dashboards for all roles'}
+              </h3>
+
+              <p>
+                {lang === 'UA'
+                  ? 'Клієнт, спеціаліст, реєстратор та адміністратор.'
+                  : 'Client, specialist, registrar and administrator.'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {pageError && (
+        <section className="page-section">
+          <div className="container">
+            <div className="empty-state">
+              <p>{pageError}</p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section className="page-section">
+        <div className="container">
+          <div className="page-header">
+            <h2>
+              {lang === 'UA'
+                ? 'Найближчі вікна'
+                : 'Nearest slots'}
+            </h2>
+          </div>
+
+          {loading ? (
+            <div className="empty-state">
+              <p>
+                {lang === 'UA'
+                  ? 'Завантаження...'
+                  : 'Loading...'}
+              </p>
+            </div>
+          ) : nearestSlots.length > 0 ? (
+            <div className="dashboard-grid dashboard-grid-3">
+              {nearestSlots.map((slot) => (
+                <div
+                  key={slot.id}
+                  className="card slot-card"
+                >
+                  <div className="slot-top">
+                    <span className="badge badge-primary">
+                      {slot.dateLabel}
+                    </span>
+
+                    <strong>
+                      {slot.time}
+                    </strong>
+                  </div>
+
+                  <h3>
+                    {slot.service}
+                  </h3>
+
+                  <p className="muted-text">
+                    {slot.specialist}
+                  </p>
+
+                  {slot.location && (
+                    <p className="muted-text">
+                      {slot.location}
+                    </p>
+                  )}
+
+                  <Link
+                    to={`/booking?service=${slot.serviceId}&specialist=${slot.specialistId}&location=${slot.locationId}&date=${slot.date}&time=${slot.time}`}
+                    className="btn btn-primary"
+                  >
+                    {lang === 'UA'
+                      ? 'Обрати'
+                      : 'Select'}
+                  </Link>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state">
+              <p>
+                {lang === 'UA'
+                  ? 'Поки немає доступних слотів'
+                  : 'No available slots yet'}
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="page-section">
+        <div className="container">
+          <div className="page-header">
+            <h2>
+              {lang === 'UA'
+                ? 'Популярні послуги'
+                : 'Popular services'}
+            </h2>
+          </div>
+
+          {loading ? (
+            <div className="empty-state">
+              <p>
+                {lang === 'UA'
+                  ? 'Завантаження...'
+                  : 'Loading...'}
+              </p>
+            </div>
+          ) : popularServices.length > 0 ? (
+            <div className="dashboard-grid dashboard-grid-3">
+              {popularServices.map((service) => (
+                <div
+                  key={service.id}
+                  className="card service-card"
+                >
+                  <div className="service-card-top">
+                    <span className="badge badge-success">
+                      {service.category}
+                    </span>
+                  </div>
+
+                  <h3>
+                    {service.name}
+                  </h3>
+
+                  <p className="muted-text">
+                    {service.duration}
+                  </p>
+
+                  <p className="service-price">
+                    {service.priceLabel}
+                  </p>
+
+                  <Link
+                    to={`/services/${service.id}`}
+                    className="btn btn-secondary"
+                  >
+                    {lang === 'UA'
+                      ? 'Деталі'
+                      : 'Details'}
+                  </Link>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state">
+              <p>
+                {lang === 'UA'
+                  ? 'Послуги ще не додані'
+                  : 'Services have not been added yet'}
+              </p>
+            </div>
+          )}
+
+          <div className="section-actions">
+            <Link
+              to="/services"
+              className="btn btn-primary"
+            >
+              {lang === 'UA'
+                ? 'Переглянути всі послуги'
+                : 'View all services'}
+            </Link>
           </div>
         </div>
       </section>

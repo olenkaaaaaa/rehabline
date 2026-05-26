@@ -1,28 +1,48 @@
+import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
-/**
- * Компонент для захисту маршрутів.
- * @param {Object} props
- * @param {React.ReactNode} props.children - компонент, який потрібно захистити
- * @param {Array<string>} [props.allowedRoles] - масив дозволених ролей (якщо не вказано, достатньо просто авторизації)
- */
-const PrivateRoute = ({ children, allowedRoles }) => {
-  const { user } = useAuth();
+const getDefaultRouteByRole = (role) => {
+  if (role === 'admin') return '/admin';
+  if (role === 'registrar') return '/registrar';
+  if (role === 'specialist') return '/specialist';
+
+  return '/client';
+};
+
+const PrivateRoute = ({ children, allowedRoles = [] }) => {
+  const { user, profile, loading } = useAuth();
   const location = useLocation();
 
-  // Якщо користувач не авторизований – перенаправляємо на логін, зберігаючи поточний шлях
+  if (loading) {
+    return (
+      <div className="app-loader">
+        <div className="loader-card">
+          <h2>RehabLine</h2>
+          <p>Завантаження...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!user) {
-    return <Navigate to="/login" state={{ from: location.pathname + location.search }} replace />;
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={{
+          from: location.pathname + location.search,
+        }}
+      />
+    );
   }
 
-  // Якщо вказано дозволені ролі, перевіряємо, чи роль користувача в списку
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
-    // Якщо роль не підходить – на головну (або можна на сторінку "Немає доступу")
-    return <Navigate to="/" replace />;
+  const userRole = profile?.role || 'client';
+
+  if (allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
+    return <Navigate to={getDefaultRouteByRole(userRole)} replace />;
   }
 
-  // Якщо все добре – рендеримо дочірній компонент
   return children;
 };
 

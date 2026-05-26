@@ -1,59 +1,98 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { services, specialists } from '../../data/mockData';
+import { getServiceName } from './BookingWizard';
 
-const Step1Service = ({ bookingData, updateBookingData, nextStep }) => {
+const Step1Service = ({
+  bookingData,
+  updateBookingData,
+  availableServices,
+  nextStep,
+}) => {
   const { lang } = useLanguage();
-  const [selectedServiceId, setSelectedServiceId] = useState(bookingData.serviceId);
+  const [selectedServiceId, setSelectedServiceId] = useState(
+    bookingData.serviceId
+  );
 
-  // Якщо вказано specialist, фільтруємо тільки його послуги
-  const availableServices = useMemo(() => {
-    if (bookingData.specialistId) {
-      const specialist = specialists.find(s => s.id === bookingData.specialistId);
-      return services.filter(s => specialist?.serviceIds.includes(s.id));
-    }
-    return services;
-  }, [bookingData.specialistId]);
-
-  const handleSelect = (serviceId) => {
-    setSelectedServiceId(serviceId);
-  };
+  const services = useMemo(() => availableServices || [], [availableServices]);
 
   const handleNext = () => {
-    if (selectedServiceId) {
-      updateBookingData({ serviceId: selectedServiceId });
-      nextStep();
-    } else {
+    if (!selectedServiceId) {
       alert(lang === 'UA' ? 'Оберіть послугу' : 'Please select a service');
+      return;
     }
+
+    updateBookingData({
+      serviceId: selectedServiceId,
+      time: null,
+    });
+
+    nextStep();
   };
 
   return (
-    <div className="step step1">
+    <div className="booking-card">
       <h2>{lang === 'UA' ? 'Оберіть послугу' : 'Choose a service'}</h2>
+
       {!bookingData.specialistId && (
-        <p className="tip">
+        <p className="hint">
           {lang === 'UA'
-            ? 'Якщо не впевнені, оберіть консультацію реабілітолога - він підкаже оптимальну програму.'
-            : 'If unsure, choose a rehabilitation consultation - they will recommend the best program.'}
+            ? 'Якщо не впевнені, оберіть консультацію реабілітолога — спеціаліст підкаже оптимальну програму.'
+            : 'If unsure, choose a rehabilitation consultation — the specialist will recommend the best program.'}
         </p>
       )}
-      <div className="services-list">
-        {availableServices.map(service => (
-          <div
-            key={service.id}
-            className={`service-card ${selectedServiceId === service.id ? 'selected' : ''}`}
-            onClick={() => handleSelect(service.id)}
-          >
-            <h3>{service.name[lang]}</h3>
-            <p className="service-duration">{service.duration} • від {service.price} грн</p>
-            <p className="service-category">{service.category[lang]}</p>
-            {service.tags && <span className="service-tag">{service.tags[lang]}</span>}
+
+      <div className="booking-selection-grid">
+        {services.length > 0 ? (
+          services.map((service) => (
+            <button
+              type="button"
+              key={service.id}
+              className={`selection-card ${
+                selectedServiceId === service.id ? 'selected' : ''
+              }`}
+              onClick={() => setSelectedServiceId(service.id)}
+            >
+              <h3>{getServiceName(service, lang)}</h3>
+
+              <p>
+                {service.duration_minutes} {lang === 'UA' ? 'хв' : 'min'} ·{' '}
+                {lang === 'UA' ? 'від' : 'from'} {Number(service.price || 0)} грн
+              </p>
+
+              <div className="selection-meta">
+                {(service.category_ua || service.category_en) && (
+                  <span>
+                    {lang === 'UA'
+                      ? service.category_ua
+                      : service.category_en || service.category_ua}
+                  </span>
+                )}
+
+                {(service.tag_ua || service.tag_en) && (
+                  <span>
+                    {lang === 'UA'
+                      ? service.tag_ua
+                      : service.tag_en || service.tag_ua}
+                  </span>
+                )}
+              </div>
+            </button>
+          ))
+        ) : (
+          <div className="empty-state">
+            <p>
+              {lang === 'UA'
+                ? 'Доступних послуг не знайдено'
+                : 'No available services found'}
+            </p>
           </div>
-        ))}
+        )}
       </div>
-      <div className="step-actions">
-        <button className="btn-primary" onClick={handleNext}>
+
+      <div className="booking-actions">
+        <span />
+
+        <button type="button" className="btn btn-primary" onClick={handleNext}>
           {lang === 'UA' ? 'Далі: обрати час' : 'Next: choose time'}
         </button>
       </div>

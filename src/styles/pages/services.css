@@ -1,0 +1,236 @@
+.services-page {
+  width: 100%;
+  min-width: 0;
+  padding: 24px 0 50px;
+}
+
+/* Прибираємо великий верхній заголовок "Послуги" */
+.services-page .page-header,
+.services-page .page-hero,
+.services-hero {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+
+.services-page .page-header h1,
+.services-page .page-hero h1,
+.services-hero h1,
+.services-page h1:first-child {
+  display: none !important;
+}
+
+.services-page .page-header p,
+.services-page .page-hero p,
+.services-hero p,
+.services-page > p:first-of-type {
+  display: none !important;
+}
+
+/* Фільтри компактні */
+.services-toolbar,
+.services-filters,
+.filters-panel {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) 260px 260px;
+  gap: 14px;
+  align-items: end;
+  margin: 0 0 22px !important;
+  padding: 22px 24px;
+  border-radius: 26px;
+  background: #ffffff;
+  border: 1px solid #e3edf2;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+}
+
+.services-toolbar .form-group,
+.services-filters .form-group,
+.filters-panel .form-group {
+  gap: 6px;
+}
+
+.services-toolbar label,
+.services-filters label,
+.filters-panel label {
+  font-size: 13px;
+  font-weight: 800;
+  color: #526273;
+}
+
+.services-toolbar input,
+.services-toolbar select,
+.services-filters input,
+.services-filters select,
+.filters-panel input,
+.filters-panel select {
+  min-height: 46px;
+  height: 46px;
+  border-radius: 15px;
+  font-size: 14px;
+}
+
+/* Текст "Знайдено" робимо менш помітним */
+.services-count,
+.results-count {
+  margin: 0 0 14px;
+  color: #526273;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+/* Сітка послуг */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+/* Компактна картка послуги */
+.service-card {
+  min-width: 0;
+  min-height: 285px;
+  padding: 24px 24px 22px;
+  border-radius: 26px;
+  background: #ffffff;
+  border: 1px solid #e3edf2;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: 0.2s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-2px);
+  border-color: #22bfc2;
+}
+
+.service-card h3 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.18;
+  font-weight: 900;
+  color: #08253d;
+}
+
+.service-card p {
+  margin: 0;
+  color: #657487;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.service-card .service-description,
+.service-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.service-meta,
+.service-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: #08253d;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.service-price {
+  margin-top: 2px;
+  font-size: 18px;
+  font-weight: 900;
+  color: #087783;
+}
+
+.service-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.badge,
+.service-category {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #eefafa;
+  color: #087783;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* Кнопки внизу картки */
+.service-card .card-actions,
+.service-actions {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.service-card .btn,
+.service-card a,
+.service-card button {
+  min-height: 42px;
+  border-radius: 14px;
+  font-size: 14px;
+}
+
+/* Якщо кнопки просто лежать напряму в картці */
+.service-card > .btn,
+.service-card > a.btn,
+.service-card > button {
+  margin-top: auto;
+}
+
+/* Адаптив */
+@media (max-width: 1500px) {
+  .services-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1120px) {
+  .services-toolbar,
+  .services-filters,
+  .filters-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .services-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .services-page {
+    padding-top: 16px;
+  }
+
+  .services-toolbar,
+  .services-filters,
+  .filters-panel {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .service-card {
+    min-height: auto;
+    padding: 22px;
+  }
+
+  .service-card .card-actions,
+  .service-actions {
+    grid-template-columns: 1fr;
+  }
+}

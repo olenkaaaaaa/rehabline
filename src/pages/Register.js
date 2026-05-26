@@ -1,17 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {
+  FaCheck,
+  FaEye,
+  FaEyeSlash,
+  FaTimes,
+} from 'react-icons/fa';
+
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
-import { FaCheck, FaTimes, FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Register = () => {
   const { lang } = useLanguage();
   const { register } = useAuth();
+
   const navigate = useNavigate();
   const location = useLocation();
+
   const from = location.state?.from || '/';
 
-  // Стан форми
+  const [submitting, setSubmitting] = useState(false);
+
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -23,15 +32,12 @@ const Register = () => {
     agree: false,
   });
 
-  // Стан для відображення пароля
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Стан для помилок валідації
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
 
-  // Стан для сили пароля
   const [passwordStrength, setPasswordStrength] = useState({
     length: false,
     uppercase: false,
@@ -40,9 +46,9 @@ const Register = () => {
     special: false,
   });
 
-  // Валідація пароля в реальному часі
   useEffect(() => {
     const pwd = formData.password;
+
     setPasswordStrength({
       length: pwd.length >= 8,
       uppercase: /[A-Z]/.test(pwd),
@@ -52,75 +58,106 @@ const Register = () => {
     });
   }, [formData.password]);
 
-  // Обробка змін у формі
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  const handleChange = (event) => {
+    const { name, value, type, checked } = event.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
-  // Позначення поля як "торкнуте" при втраті фокусу
   const handleBlur = (field) => {
-    setTouched((prev) => ({ ...prev, [field]: true }));
+    setTouched((prev) => ({
+      ...prev,
+      [field]: true,
+    }));
   };
 
-  // Валідація всіх полів
   const validateForm = () => {
     const newErrors = {};
 
-    // ПІБ
     if (!formData.fullName.trim()) {
-      newErrors.fullName = lang === 'UA' ? "Введіть ПІБ" : "Full name is required";
-    } else if (formData.fullName.trim().length < 2) {
-      newErrors.fullName = lang === 'UA' ? "Ім'я занадто коротке" : "Name is too short";
+      newErrors.fullName =
+        lang === 'UA'
+          ? 'Введіть ПІБ'
+          : 'Enter full name';
     }
 
-    // Телефон (український формат)
     const phoneRegex = /^\+?380\d{9}$/;
+    const cleanPhone = formData.phone.replace(/\s/g, '');
+
     if (!formData.phone.trim()) {
-      newErrors.phone = lang === 'UA' ? "Введіть телефон" : "Phone is required";
-    } else if (!phoneRegex.test(formData.phone.replace(/\s/g, ''))) {
-      newErrors.phone = lang === 'UA' ? "Невірний формат телефону (має бути +380XXXXXXXXX)" : "Invalid phone format (should be +380XXXXXXXXX)";
+      newErrors.phone =
+        lang === 'UA'
+          ? 'Введіть телефон'
+          : 'Enter phone';
+    } else if (!phoneRegex.test(cleanPhone)) {
+      newErrors.phone =
+        lang === 'UA'
+          ? 'Невірний формат телефону'
+          : 'Invalid phone format';
     }
 
-    // Email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     if (!formData.email.trim()) {
-      newErrors.email = lang === 'UA' ? "Введіть email" : "Email is required";
+      newErrors.email =
+        lang === 'UA'
+          ? 'Введіть email'
+          : 'Enter email';
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = lang === 'UA' ? "Некоректний email" : "Invalid email";
+      newErrors.email =
+        lang === 'UA'
+          ? 'Некоректний email'
+          : 'Invalid email';
     }
 
-    // Пароль
     if (!formData.password) {
-      newErrors.password = lang === 'UA' ? "Введіть пароль" : "Password is required";
+      newErrors.password =
+        lang === 'UA'
+          ? 'Введіть пароль'
+          : 'Enter password';
     } else {
-      const strengthValues = Object.values(passwordStrength);
-      if (strengthValues.some(v => !v)) {
-        newErrors.password = lang === 'UA' ? "Пароль не відповідає вимогам" : "Password does not meet requirements";
+      const values = Object.values(passwordStrength);
+
+      if (values.some((value) => !value)) {
+        newErrors.password =
+          lang === 'UA'
+            ? 'Пароль не відповідає вимогам'
+            : 'Password does not meet requirements';
       }
     }
 
-    // Підтвердження пароля
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = lang === 'UA' ? "Паролі не співпадають" : "Passwords do not match";
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword =
+        lang === 'UA'
+          ? 'Підтвердіть пароль'
+          : 'Confirm password';
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword =
+        lang === 'UA'
+          ? 'Паролі не співпадають'
+          : 'Passwords do not match';
     }
 
-    // Згода
     if (!formData.agree) {
-      newErrors.agree = lang === 'UA' ? "Необхідна згода на обробку даних" : "You must agree to the privacy policy";
+      newErrors.agree =
+        lang === 'UA'
+          ? 'Потрібна згода'
+          : 'Agreement required';
     }
 
     return newErrors;
   };
 
-  // Відправка форми
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const newErrors = validateForm();
-    setErrors(newErrors);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const validationErrors = validateForm();
+
+    setErrors(validationErrors);
+
     setTouched({
       fullName: true,
       phone: true,
@@ -130,34 +167,99 @@ const Register = () => {
       agree: true,
     });
 
-    if (Object.keys(newErrors).length === 0) {
-      try {
-        await register(formData);
-        // Після успішної реєстрації перенаправляємо на логін (або відразу в кабінет)
-        navigate('/login', { state: { from } });
-      } catch (error) {
-        console.error('Registration failed:', error);
-        alert(lang === 'UA' ? 'Помилка реєстрації' : 'Registration failed');
-      }
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+
+      await register(
+        formData.email,
+        formData.password,
+        {
+          fullName: formData.fullName,
+          phone: formData.phone,
+          language: formData.language,
+          timezone: formData.timezone,
+          role: 'client',
+        }
+      );
+
+      navigate('/login', {
+        replace: true,
+        state: { from },
+      });
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        lang === 'UA'
+          ? `Помилка реєстрації: ${error.message || 'Спробуйте ще раз'}`
+          : `Registration failed: ${error.message || 'Try again'}`
+      );
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  // Функція для відображення індикатора сили пароля
-  const renderPasswordStrength = () => {
-    const requirements = [
-      { key: 'length', label: lang === 'UA' ? 'Мінімум 8 символів' : 'At least 8 characters' },
-      { key: 'uppercase', label: lang === 'UA' ? 'Велика літера' : 'Uppercase letter' },
-      { key: 'lowercase', label: lang === 'UA' ? 'Мала літера' : 'Lowercase letter' },
-      { key: 'number', label: lang === 'UA' ? 'Цифра' : 'Number' },
-      { key: 'special', label: lang === 'UA' ? 'Спеціальний символ (!@#$...)' : 'Special character (!@#$...)' },
+  const renderStrength = () => {
+    const items = [
+      {
+        key: 'length',
+        label:
+          lang === 'UA'
+            ? 'Мінімум 8 символів'
+            : 'At least 8 characters',
+      },
+      {
+        key: 'uppercase',
+        label:
+          lang === 'UA'
+            ? 'Велика літера'
+            : 'Uppercase letter',
+      },
+      {
+        key: 'lowercase',
+        label:
+          lang === 'UA'
+            ? 'Мала літера'
+            : 'Lowercase letter',
+      },
+      {
+        key: 'number',
+        label:
+          lang === 'UA'
+            ? 'Цифра'
+            : 'Number',
+      },
+      {
+        key: 'special',
+        label:
+          lang === 'UA'
+            ? 'Спецсимвол'
+            : 'Special symbol',
+      },
     ];
 
     return (
       <div className="password-strength">
-        {requirements.map((req) => (
-          <div key={req.key} className={`strength-item ${passwordStrength[req.key] ? 'valid' : 'invalid'}`}>
-            {passwordStrength[req.key] ? <FaCheck className="icon valid" /> : <FaTimes className="icon invalid" />}
-            <span>{req.label}</span>
+        {items.map((item) => (
+          <div
+            key={item.key}
+            className={`strength-item ${
+              passwordStrength[item.key]
+                ? 'valid'
+                : 'invalid'
+            }`}
+          >
+            {passwordStrength[item.key] ? (
+              <FaCheck className="icon valid" />
+            ) : (
+              <FaTimes className="icon invalid" />
+            )}
+
+            <span>{item.label}</span>
           </div>
         ))}
       </div>
@@ -166,200 +268,344 @@ const Register = () => {
 
   return (
     <div className="auth-page">
-      <div className="auth-container">
+      <div className="card auth-container">
         <h1 className="auth-title">
-          {lang === 'UA' ? 'Реєстрація' : 'Register'}
+          {lang === 'UA'
+            ? 'Реєстрація'
+            : 'Register'}
         </h1>
+
         <p className="auth-subtitle">
-          {lang === 'UA' ? 'Створіть акаунт для онлайн-записів' : 'Create an account for online booking'}
+          {lang === 'UA'
+            ? 'Створіть акаунт для онлайн-запису'
+            : 'Create account for online booking'}
         </p>
 
-        <form onSubmit={handleSubmit} className="auth-form">
-          {/* ПІБ */}
+        <form
+          onSubmit={handleSubmit}
+          className="auth-form"
+        >
           <div className="form-group">
-            <label htmlFor="fullName">
-              {lang === 'UA' ? 'ПІБ' : 'Full name'}
+            <label>
+              {lang === 'UA'
+                ? 'ПІБ'
+                : 'Full name'}
             </label>
+
             <input
               type="text"
-              id="fullName"
               name="fullName"
               value={formData.fullName}
               onChange={handleChange}
               onBlur={() => handleBlur('fullName')}
-              placeholder={lang === 'UA' ? 'Бурдж Олена' : 'Olena Burdiak'}
-              className={touched.fullName && errors.fullName ? 'error' : ''}
+              placeholder={
+                lang === 'UA'
+                  ? 'Іваненко Олена'
+                  : 'Olena Ivanenko'
+              }
+              className={
+                touched.fullName && errors.fullName
+                  ? 'error'
+                  : ''
+              }
+              disabled={submitting}
             />
+
             {touched.fullName && errors.fullName && (
-              <span className="error-message">{errors.fullName}</span>
+              <span className="error-message">
+                {errors.fullName}
+              </span>
             )}
           </div>
 
-          {/* Телефон */}
           <div className="form-group">
-            <label htmlFor="phone">
-              {lang === 'UA' ? 'Телефон' : 'Phone'}
+            <label>
+              {lang === 'UA'
+                ? 'Телефон'
+                : 'Phone'}
             </label>
+
             <input
               type="tel"
-              id="phone"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
               onBlur={() => handleBlur('phone')}
               placeholder="+380991234567"
-              className={touched.phone && errors.phone ? 'error' : ''}
+              className={
+                touched.phone && errors.phone
+                  ? 'error'
+                  : ''
+              }
+              disabled={submitting}
             />
+
             {touched.phone && errors.phone && (
-              <span className="error-message">{errors.phone}</span>
+              <span className="error-message">
+                {errors.phone}
+              </span>
             )}
           </div>
 
-          {/* Email */}
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label>Email</label>
+
             <input
               type="email"
-              id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               onBlur={() => handleBlur('email')}
-              placeholder="burdyak.olena@gmail.com"
-              className={touched.email && errors.email ? 'error' : ''}
+              placeholder="example@gmail.com"
+              className={
+                touched.email && errors.email
+                  ? 'error'
+                  : ''
+              }
+              disabled={submitting}
             />
+
             {touched.email && errors.email && (
-              <span className="error-message">{errors.email}</span>
+              <span className="error-message">
+                {errors.email}
+              </span>
             )}
           </div>
 
-          {/* Пароль */}
           <div className="form-group">
-            <label htmlFor="password">
-              {lang === 'UA' ? 'Пароль' : 'Password'}
+            <label>
+              {lang === 'UA'
+                ? 'Пароль'
+                : 'Password'}
             </label>
+
             <div className="password-input-wrapper">
               <input
-                type={showPassword ? 'text' : 'password'}
-                id="password"
+                type={
+                  showPassword
+                    ? 'text'
+                    : 'password'
+                }
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 onBlur={() => handleBlur('password')}
                 placeholder="********"
-                className={touched.password && errors.password ? 'error' : ''}
+                className={
+                  touched.password && errors.password
+                    ? 'error'
+                    : ''
+                }
+                disabled={submitting}
               />
+
               <button
                 type="button"
                 className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() =>
+                  setShowPassword((prev) => !prev)
+                }
+                disabled={submitting}
+                aria-label={
+                  showPassword
+                    ? lang === 'UA'
+                      ? 'Сховати пароль'
+                      : 'Hide password'
+                    : lang === 'UA'
+                      ? 'Показати пароль'
+                      : 'Show password'
+                }
               >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                {showPassword ? (
+                  <FaEyeSlash />
+                ) : (
+                  <FaEye />
+                )}
               </button>
             </div>
+
+            {renderStrength()}
+
             {touched.password && errors.password && (
-              <span className="error-message">{errors.password}</span>
+              <span className="error-message">
+                {errors.password}
+              </span>
             )}
-            {renderPasswordStrength()}
           </div>
 
-          {/* Підтвердження пароля */}
           <div className="form-group">
-            <label htmlFor="confirmPassword">
-              {lang === 'UA' ? 'Пароль ще раз' : 'Confirm password'}
+            <label>
+              {lang === 'UA'
+                ? 'Повторіть пароль'
+                : 'Confirm password'}
             </label>
+
             <div className="password-input-wrapper">
               <input
-                type={showConfirmPassword ? 'text' : 'password'}
-                id="confirmPassword"
+                type={
+                  showConfirmPassword
+                    ? 'text'
+                    : 'password'
+                }
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                onBlur={() => handleBlur('confirmPassword')}
+                onBlur={() =>
+                  handleBlur('confirmPassword')
+                }
                 placeholder="********"
-                className={touched.confirmPassword && errors.confirmPassword ? 'error' : ''}
+                className={
+                  touched.confirmPassword &&
+                  errors.confirmPassword
+                    ? 'error'
+                    : ''
+                }
+                disabled={submitting}
               />
+
               <button
                 type="button"
                 className="password-toggle"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                onClick={() =>
+                  setShowConfirmPassword((prev) => !prev)
+                }
+                disabled={submitting}
+                aria-label={
+                  showConfirmPassword
+                    ? lang === 'UA'
+                      ? 'Сховати повтор пароля'
+                      : 'Hide confirm password'
+                    : lang === 'UA'
+                      ? 'Показати повтор пароля'
+                      : 'Show confirm password'
+                }
               >
-                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                {showConfirmPassword ? (
+                  <FaEyeSlash />
+                ) : (
+                  <FaEye />
+                )}
               </button>
             </div>
-            {touched.confirmPassword && errors.confirmPassword && (
-              <span className="error-message">{errors.confirmPassword}</span>
-            )}
+
+            {touched.confirmPassword &&
+              errors.confirmPassword && (
+                <span className="error-message">
+                  {errors.confirmPassword}
+                </span>
+              )}
           </div>
 
-          {/* Мова та часовий пояс */}
           <div className="form-row">
-            <div className="form-group half">
-              <label htmlFor="language">
-                {lang === 'UA' ? 'Мова інтерфейсу' : 'Interface language'}
+            <div className="form-group">
+              <label>
+                {lang === 'UA'
+                  ? 'Мова'
+                  : 'Language'}
               </label>
+
               <select
-                id="language"
                 name="language"
                 value={formData.language}
                 onChange={handleChange}
+                disabled={submitting}
               >
-                <option value="UA">Українська (UA)</option>
-                <option value="EN">English (EN)</option>
+                <option value="UA">
+                  Українська
+                </option>
+
+                <option value="EN">
+                  English
+                </option>
               </select>
             </div>
 
-            <div className="form-group half">
-              <label htmlFor="timezone">
-                {lang === 'UA' ? 'Часовий пояс' : 'Timezone'}
+            <div className="form-group">
+              <label>
+                {lang === 'UA'
+                  ? 'Часовий пояс'
+                  : 'Timezone'}
               </label>
+
               <select
-                id="timezone"
                 name="timezone"
                 value={formData.timezone}
                 onChange={handleChange}
+                disabled={submitting}
               >
-                <option value="Europe/Kiev">Europe/Kiev</option>
-                <option value="Europe/London">Europe/London</option>
-                <option value="America/New_York">America/New_York</option>
+                <option value="Europe/Kiev">
+                  Europe/Kiev
+                </option>
+
+                <option value="Europe/London">
+                  Europe/London
+                </option>
+
+                <option value="America/New_York">
+                  America/New_York
+                </option>
               </select>
             </div>
           </div>
 
-          {/* Згода */}
-          <div className="checkbox-group">
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                name="agree"
-                checked={formData.agree}
-                onChange={handleChange}
-                onBlur={() => handleBlur('agree')}
-              />
-              <span>
-                {lang === 'UA'
-                  ? 'Погоджуюсь на обробку персональних даних (Privacy Policy)'
-                  : 'I agree to the processing of personal data (Privacy Policy)'}
-              </span>
-            </label>
-            {touched.agree && errors.agree && (
-              <span className="error-message">{errors.agree}</span>
-            )}
-          </div>
+          <label className="checkbox-label">
+            <input
+              type="checkbox"
+              name="agree"
+              checked={formData.agree}
+              onChange={handleChange}
+              disabled={submitting}
+            />
 
-          <button type="submit" className="btn-primary auth-btn">
-            {lang === 'UA' ? 'Створити акаунт' : 'Create account'}
+            <span>
+              {lang === 'UA'
+                ? 'Погоджуюсь з політикою конфіденційності'
+                : 'I agree with privacy policy'}
+            </span>
+          </label>
+
+          {touched.agree && errors.agree && (
+            <span className="error-message">
+              {errors.agree}
+            </span>
+          )}
+
+          <button
+            type="submit"
+            className="btn btn-primary auth-btn"
+            disabled={submitting}
+          >
+            {submitting
+              ? lang === 'UA'
+                ? 'Створення...'
+                : 'Creating...'
+              : lang === 'UA'
+                ? 'Створити акаунт'
+                : 'Create account'}
           </button>
 
           <div className="auth-divider">
-            <span>{lang === 'UA' ? 'або' : 'or'}</span>
+            <span>
+              {lang === 'UA'
+                ? 'або'
+                : 'or'}
+            </span>
           </div>
 
           <div className="auth-footer">
             <p>
-              {lang === 'UA' ? 'Вже маєте акаунт?' : 'Already have an account?'}{' '}
-              <Link to="/login" state={{ from }} className="register-link">
-                {lang === 'UA' ? 'Увійти' : 'Login'}
+              {lang === 'UA'
+                ? 'Вже маєте акаунт?'
+                : 'Already have account?'}{' '}
+
+              <Link
+                to="/login"
+                state={{ from }}
+                className="register-link"
+              >
+                {lang === 'UA'
+                  ? 'Увійти'
+                  : 'Login'}
               </Link>
             </p>
           </div>

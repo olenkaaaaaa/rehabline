@@ -1,0 +1,212 @@
+.registrar-waitlist-page {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.registrar-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.eyebrow {
+  margin-bottom: 10px;
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.waitlist-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 480px;
+  gap: 24px;
+  align-items: start;
+}
+
+.registrar-form-card,
+.registrar-card {
+  padding: 28px;
+  border-radius: var(--radius-xl);
+  background: white;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.registrar-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-field span {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.form-field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.registrar-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.waitlist-items {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.waitlist-item {
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid var(--border-light);
+  background: #f8fcfc;
+  transition: var(--transition);
+}
+
+.waitlist-item.selected {
+  border-color: var(--primary);
+  background: #f1fcfc;
+}
+
+.waitlist-item-main {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.waitlist-item-main strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.waitlist-item-main span {
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.waitlist-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.waitlist-meta span {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: white;
+  border: 1px solid #e5ecef;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.waitlist-note,
+.waitlist-offer {
+  margin-top: 12px;
+  line-height: 1.7;
+}
+
+.mini-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.mini-actions button {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
+  background: white;
+  font-weight: 700;
+  transition: var(--transition);
+}
+
+.mini-actions button:hover {
+  border-color: var(--primary);
+}
+
+.waitlist-offer-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.status-active {
+  background: #fff4da;
+  color: #b77b13;
+}
+
+.status-offered {
+  background: #e7f2ff;
+  color: #2563c9;
+}
+
+.status-booked {
+  background: #e8f8ed;
+  color: #21874a;
+}
+
+.status-cancelled {
+  background: #ffe8e8;
+  color: #cb3f3f;
+}
+
+@media (max-width: 1380px) {
+  .waitlist-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .registrar-hero {
+    flex-direction: column;
+  }
+
+  .registrar-form-card,
+  .registrar-card {
+    padding: 22px;
+  }
+
+  .registrar-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .registrar-form-actions {
+    flex-direction: column;
+  }
+
+  .registrar-form-actions button {
+    width: 100%;
+  }
+
+  .waitlist-item-main {
+    flex-direction: column;
+  }
+
+  .mini-actions {
+    flex-direction: column;
+  }
+
+  .mini-actions button {
+    width: 100%;
+  }
+}

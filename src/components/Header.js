@@ -1,32 +1,72 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
+import '../styles/layout/header.css';
 
 const Header = () => {
   const { lang, toggleLanguage } = useLanguage();
-  const { user, logout } = useAuth();
+  const { user, profile, logout } = useAuth();
+
+  const dashboardPath = profile?.role ? `/${profile.role}` : '/client';
+
+  const navItems = [
+    {
+      path: '/services',
+      label: lang === 'UA' ? 'Послуги' : 'Services',
+    },
+    {
+      path: '/specialists',
+      label: lang === 'UA' ? 'Спеціалісти' : 'Specialists',
+    },
+    {
+      path: '/locations',
+      label: lang === 'UA' ? 'Локації' : 'Locations',
+    },
+    {
+      path: '/contacts',
+      label: lang === 'UA' ? 'Контакти' : 'Contacts',
+    },
+  ];
 
   return (
     <header className="header">
-      <div className="container">
-        <Link to="/" className="logo">RehabLine</Link>
+      <div className="container header-container">
+        <Link to="/" className="logo">
+          <span className="logo-mark">R</span>
+          <span>RehabLine</span>
+        </Link>
+
         <nav className="nav-menu">
-          <Link to="/services">{lang === 'UA' ? 'Послуги' : 'Services'}</Link>
-          <Link to="/specialists">{lang === 'UA' ? 'Спеціалісти' : 'Specialists'}</Link>
-          <Link to="/locations">{lang === 'UA' ? 'Локації' : 'Locations'}</Link>
-          <Link to="/contacts">{lang === 'UA' ? 'Контакти' : 'Contacts'}</Link>
+          {navItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) =>
+                `nav-link ${isActive ? 'active' : ''}`
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))}
         </nav>
+
         <div className="header-actions">
-          <button onClick={toggleLanguage} className="lang-switcher">
+          <button
+            type="button"
+            onClick={toggleLanguage}
+            className="lang-switcher"
+          >
             {lang === 'UA' ? 'EN' : 'UA'}
           </button>
+
           {user ? (
             <div className="user-menu">
-              <Link to={`/${user.role}`} className="dashboard-link">
+              <Link to={dashboardPath} className="dashboard-link">
                 {lang === 'UA' ? 'Кабінет' : 'Dashboard'}
               </Link>
-              <button onClick={logout} className="login-btn">
+
+              <button type="button" onClick={logout} className="login-btn">
                 {lang === 'UA' ? 'Вийти' : 'Logout'}
               </button>
             </div>

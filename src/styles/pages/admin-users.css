@@ -1,0 +1,142 @@
+.admin-users {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.admin-users-filters {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 16px;
+}
+
+.admin-users-table-wrap {
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background: white;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-users-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-users-table thead {
+  background: #f7fafb;
+}
+
+.admin-users-table th {
+  padding: 16px 14px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.admin-users-table td {
+  padding: 18px 14px;
+  border-bottom: 1px solid #edf2f4;
+  vertical-align: middle;
+}
+
+.admin-users-table tbody tr {
+  transition: var(--transition);
+}
+
+.admin-users-table tbody tr:hover {
+  background: #f8fcfc;
+}
+
+.admin-users-table input,
+.admin-users-table select {
+  width: 100%;
+  min-width: 140px;
+}
+
+.role-badge {
+  min-width: 130px;
+}
+
+.role-client {
+  background: #eef2ff;
+  color: #4b5ec9;
+}
+
+.role-specialist {
+  background: #e7faf7;
+  color: #16856d;
+}
+
+.role-registrar {
+  background: #fff6df;
+  color: #b7791f;
+}
+
+.role-admin {
+  background: #ffe8e8;
+  color: #bf3e3e;
+}
+
+.inline-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+
+.inline-checkbox input {
+  width: 18px;
+  height: 18px;
+}
+
+.table-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  border: 1px solid var(--border-light);
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.icon-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  color: var(--primary-dark);
+}
+
+@media (max-width: 1280px) {
+  .admin-users-table-wrap {
+    overflow-x: auto;
+  }
+
+  .admin-users-table {
+    min-width: 1250px;
+  }
+}
+
+@media (max-width: 760px) {
+  .admin-users-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .icon-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .table-actions {
+    flex-direction: column;
+  }
+}

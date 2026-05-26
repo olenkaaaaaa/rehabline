@@ -1,0 +1,276 @@
+.specialist-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dashboard-subtitle {
+  margin-top: 6px;
+  color: var(--text-secondary);
+}
+
+.specialist-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.specialist-overview-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) 420px;
+  gap: 24px;
+  align-items: start;
+}
+
+.dashboard-card {
+  padding: 28px;
+  border-radius: var(--radius-xl);
+  background: white;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.dashboard-card h2 {
+  margin-bottom: 16px;
+}
+
+.calendar-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.calendar-header-row p {
+  margin-top: 8px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.date-picker {
+  min-width: 190px;
+}
+
+.doctor-calendar-shell {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr);
+  gap: 18px;
+}
+
+.doctor-calendar-time-column {
+  position: relative;
+}
+
+.doctor-calendar-time {
+  height: 72px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.doctor-calendar-grid {
+  position: relative;
+  border-radius: 22px;
+  background: #f8fcfc;
+  border: 1px solid #e5eff1;
+  overflow: hidden;
+}
+
+.doctor-calendar-slot-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e3ecef;
+}
+
+.doctor-calendar-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.doctor-calendar-appointment {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 18px;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition);
+  overflow: hidden;
+}
+
+.doctor-calendar-appointment:hover {
+  transform: scale(1.01);
+}
+
+.doctor-calendar-appointment-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.doctor-calendar-appointment-main strong {
+  font-size: 15px;
+}
+
+.doctor-calendar-appointment-main span {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.doctor-calendar-appointment p {
+  margin: 0;
+  line-height: 1.4;
+  font-size: 13px;
+}
+
+.doctor-calendar-appointment-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11px;
+}
+
+.status-pending {
+  background: #fff4da;
+  color: #946200;
+}
+
+.status-confirmed {
+  background: #e8f8ed;
+  color: #1d6d3e;
+}
+
+.status-completed {
+  background: #e8f1ff;
+  color: #2559ba;
+}
+
+.status-cancelled {
+  background: #ffe8e8;
+  color: #b43636;
+}
+
+.upcoming-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.upcoming-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid var(--border-light);
+  background: #f8fcfc;
+}
+
+.upcoming-item-button {
+  width: 100%;
+  text-align: left;
+  transition: var(--transition);
+}
+
+.upcoming-item-button:hover {
+  border-color: var(--primary);
+  background: #f1fcfc;
+}
+
+.upcoming-item strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.upcoming-item p {
+  margin-bottom: 6px;
+}
+
+.upcoming-item span {
+  color: var(--text-secondary);
+}
+
+.small-empty {
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-state {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.error-state small {
+  color: var(--text-secondary);
+}
+
+@media (max-width: 1450px) {
+  .specialist-overview-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1100px) {
+  .specialist-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .specialist-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .calendar-header-row {
+    flex-direction: column;
+  }
+
+  .date-picker {
+    width: 100%;
+  }
+
+  .dashboard-card {
+    padding: 22px;
+  }
+
+  .doctor-calendar-shell {
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .doctor-calendar-time {
+    font-size: 11px;
+  }
+
+  .doctor-calendar-appointment {
+    left: 6px;
+    right: 6px;
+    padding: 10px;
+  }
+
+  .doctor-calendar-appointment-footer {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .upcoming-item {
+    flex-direction: column;
+  }
+}
