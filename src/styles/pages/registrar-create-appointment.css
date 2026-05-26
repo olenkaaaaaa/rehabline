@@ -1,0 +1,221 @@
+.registrar-create-page {
+  width: 100%;
+  min-width: 0;
+}
+
+.registrar-create-page .dashboard-header {
+  margin-bottom: 22px;
+}
+
+.registrar-create-form {
+  width: 100%;
+  min-width: 0;
+}
+
+.registrar-create-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 28px;
+  align-items: start;
+  width: 100%;
+  min-width: 0;
+}
+
+.registrar-form-card,
+.appointment-summary-card {
+  width: 100%;
+  min-width: 0;
+  padding: 28px;
+  border-radius: 30px;
+  background: #ffffff;
+  border: 1px solid #e3edf2;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+  overflow: hidden;
+}
+
+.appointment-summary-card {
+  position: sticky;
+  top: 112px;
+}
+
+.registrar-create-page .section-heading {
+  margin-bottom: 22px;
+}
+
+.registrar-create-page .section-heading h2 {
+  margin: 0;
+  color: #08253d;
+  font-size: 30px;
+  line-height: 1.12;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.registrar-create-page .section-heading p {
+  margin: 8px 0 0;
+  color: #657487;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.registrar-create-page .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 18px;
+  min-width: 0;
+}
+
+.registrar-create-page .form-group label {
+  color: #10233b;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.registrar-create-page input,
+.registrar-create-page select,
+.registrar-create-page textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 54px;
+  border-radius: 18px;
+  border: 1px solid #d7e4ea;
+  background: #ffffff;
+  padding: 0 18px;
+  color: #10233b;
+  font-size: 16px;
+  outline: none;
+}
+
+.registrar-create-page textarea {
+  min-height: 120px;
+  padding-top: 14px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.registrar-create-page input:focus,
+.registrar-create-page select:focus,
+.registrar-create-page textarea:focus {
+  border-color: #22bfc2;
+  box-shadow: 0 0 0 4px rgba(34, 191, 194, 0.1);
+}
+
+.registrar-create-page input:disabled,
+.registrar-create-page select:disabled {
+  background: #f4f8fa;
+  color: #9aa8b5;
+  cursor: not-allowed;
+}
+
+.registrar-create-page .form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.appointment-summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.appointment-summary-item {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: #f8fcfd;
+  border: 1px solid #e3edf2;
+}
+
+.appointment-summary-item span {
+  display: block;
+  margin-bottom: 6px;
+  color: #657487;
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 900;
+}
+
+.appointment-summary-item strong {
+  display: block;
+  color: #08253d;
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 900;
+  word-break: break-word;
+}
+
+.registrar-form-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 10px;
+  padding-top: 8px;
+}
+
+.registrar-form-actions .btn,
+.registrar-form-actions button {
+  width: 100%;
+  min-height: 52px;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.compact-empty-state {
+  margin-top: 14px;
+  padding: 18px;
+  border-radius: 18px;
+}
+
+.compact-empty-state p {
+  margin: 0;
+  color: #657487;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* захист від старих глобальних card/list стилів */
+.registrar-create-page .appointments-list {
+  display: block;
+}
+
+.registrar-create-page .appointment-summary-card .card,
+.registrar-create-page .appointment-summary-card .appointments-list .card {
+  padding: 0;
+  box-shadow: none;
+  border: 0;
+  background: transparent;
+}
+
+@media (max-width: 1280px) {
+  .registrar-create-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .appointment-summary-card {
+    position: static;
+  }
+}
+
+@media (max-width: 760px) {
+  .registrar-form-card,
+  .appointment-summary-card {
+    padding: 20px;
+    border-radius: 24px;
+  }
+
+  .registrar-create-page .section-heading h2 {
+    font-size: 25px;
+  }
+
+  .registrar-create-page .form-row,
+  .registrar-form-actions {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .registrar-form-actions {
+    gap: 12px;
+  }
+}

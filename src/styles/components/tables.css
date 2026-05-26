@@ -1,0 +1,46 @@
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  background: white;
+
+  border-radius: var(--radius-lg);
+
+  overflow: hidden;
+}
+
+.table thead {
+  background: #0b3152;
+}
+
+.table thead th {
+  padding: 18px;
+
+  color: white;
+
+  text-align: left;
+
+  font-size: var(--text-md);
+  font-weight: 700;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid var(--border-light);
+
+  transition: var(--transition);
+}
+
+.table tbody tr:hover {
+  background: #f7fbfc;
+}
+
+.table tbody td {
+  padding: 18px;
+
+  color: var(--text-primary);
+}

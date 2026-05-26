@@ -1,0 +1,62 @@
+@import './base/variables.css';
+@import './base/reset.css';
+@import './base/global.css';
+
+@import './layout/dashboard-layout.css';
+@import './layout/sidebar.css';
+@import './layout/header.css';
+@import './layout/footer.css';
+@import './layout/dashboard-system.css';
+
+@import './components/buttons.css';
+@import './components/forms.css';
+@import './components/cards.css';
+@import './components/tables.css';
+@import './components/modals.css';
+
+@import './roles/admin.css';
+@import './roles/specialist.css';
+@import './roles/registrar.css';
+@import './roles/patient.css';
+
+@import './responsive/tablet.css';
+@import './responsive/mobile.css';
+
+
+@import './pages/locations.css';
+@import './pages/auth.css';
+@import './pages/home.css';
+@import './pages/contacts.css';
+@import './pages/service-detail.css';
+@import './pages/services.css';
+@import './pages/specialist-detail.css';
+@import './pages/specialists.css';
+@import './pages/admin-appointments.css';
+@import './pages/admin-locations.css';
+@import './pages/admin-dashboard.css';
+@import './pages/admin-services.css';
+@import './pages/admin-settings.css';
+@import './pages/admin-specialists.css';
+@import './pages/admin-users.css';
+@import './pages/booking-wizard.css';
+@import './pages/client-documents.css';
+@import './pages/client-records.css';
+@import './pages/client-reviews.css';
+@import './pages/client-overview.css';
+@import './pages/client-profile.css';
+@import './pages/client-recommendations.css';
+@import './pages/client-record-detail.css';
+@import './pages/client-settings.css';
+@import './pages/registrar-appointments.css';
+@import './pages/registrar-clients.css';
+@import './pages/registrar-communications.css';
+@import './pages/registrar-create-appointment.css';
+@import './pages/registrar-panel.css';
+@import './pages/schedule-requests.css';
+@import './pages/registrar-waitlist.css';
+@import './pages/specialist-appointments.css';
+@import './pages/specialist-clients.css';
+@import './pages/specialist-overview.css';
+@import './pages/specialist-profile.css';
+@import './pages/specialist-schedule.css';
+@import './pages/specialist-schedule-settings.css';

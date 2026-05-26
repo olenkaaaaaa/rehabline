@@ -1,0 +1,37 @@
+.public-footer {
+  background: var(--text-primary);
+  color: white;
+  margin-top: 72px;
+}
+
+.public-footer-container {
+  width: min(1240px, calc(100% - 32px));
+  margin: 0 auto;
+
+  min-height: 180px;
+
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 32px;
+  align-items: center;
+}
+
+.public-footer-logo {
+  display: inline-block;
+  margin-bottom: 12px;
+
+  font-size: 26px;
+  font-weight: 900;
+  color: white;
+}
+
+.public-footer p {
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.public-footer-info,
+.public-footer-contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

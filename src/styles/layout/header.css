@@ -1,0 +1,162 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid #e6eef2;
+}
+
+.header-container {
+  min-height: 82px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 32px;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  color: #08253d;
+  text-decoration: none;
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+}
+
+.logo-mark {
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  background: #22bfc2;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 34px;
+  min-width: 0;
+}
+
+.nav-link {
+  color: #10233b;
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 900;
+  line-height: 1;
+  transition: 0.2s ease;
+}
+
+.nav-link:hover {
+  color: #087783;
+}
+
+.nav-link.active {
+  color: #087783;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.lang-switcher,
+.login-btn,
+.dashboard-link {
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: 16px;
+  border: 1px solid #e1ebef;
+  background: #ffffff;
+  color: #10233b;
+  font-size: 15px;
+  font-weight: 900;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.login-btn {
+  background: #22bfc2;
+  border-color: #22bfc2;
+  color: #ffffff;
+}
+
+.lang-switcher:hover,
+.dashboard-link:hover {
+  border-color: #22bfc2;
+  color: #087783;
+}
+
+.login-btn:hover {
+  transform: translateY(-1px);
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (max-width: 980px) {
+  .header-container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+
+  .logo {
+    justify-content: center;
+  }
+
+  .nav-menu {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+
+  .header-actions {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 560px) {
+  .logo {
+    font-size: 25px;
+  }
+
+  .logo-mark {
+    width: 40px;
+    height: 40px;
+  }
+
+  .nav-link {
+    font-size: 15px;
+  }
+
+  .lang-switcher,
+  .login-btn,
+  .dashboard-link {
+    min-height: 42px;
+    padding: 0 16px;
+  }
+}

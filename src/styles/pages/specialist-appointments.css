@@ -1,0 +1,513 @@
+.specialist-appointments {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* MAIN LAYOUT */
+/* Було 2 колонки: таблиця + права панель.
+   Тепер робимо одну колонку на всю ширину. */
+
+.specialist-workspace,
+.specialist-workspace-full {
+  display: block;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+
+.workspace-main {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+
+.workspace-side {
+  display: none;
+}
+
+/* FILTERS */
+
+.records-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.records-actions,
+.specialist-appointment-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  width: 100%;
+}
+
+.records-actions input,
+.records-actions select,
+.specialist-appointment-filters input,
+.specialist-appointment-filters select {
+  min-width: 180px;
+}
+
+/* TABLE WRAPPER */
+
+.appointments-table-wrapper {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  overflow-x: auto;
+  border-radius: var(--radius-xl);
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+/* TABLE */
+
+.appointments-table {
+  width: 100%;
+  min-width: 1050px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  background: white;
+}
+
+.appointments-table thead {
+  background: #f8fbfc;
+}
+
+.appointments-table th {
+  padding: 16px 14px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-light);
+  vertical-align: middle;
+}
+
+.appointments-table td {
+  padding: 18px 14px;
+  border-bottom: 1px solid #edf2f4;
+  vertical-align: middle;
+  color: var(--text-primary);
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.appointments-table tbody tr {
+  transition: var(--transition);
+}
+
+.appointments-table tbody tr:hover {
+  background: #f8fcfc;
+}
+
+.appointments-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.selected-row {
+  background: #f2fcfc !important;
+}
+
+/* TABLE WIDTHS */
+
+.appointments-table th:nth-child(1),
+.appointments-table td:nth-child(1) {
+  width: 120px;
+}
+
+.appointments-table th:nth-child(2),
+.appointments-table td:nth-child(2) {
+  width: 90px;
+}
+
+.appointments-table th:nth-child(3),
+.appointments-table td:nth-child(3) {
+  width: 170px;
+}
+
+.appointments-table th:nth-child(4),
+.appointments-table td:nth-child(4) {
+  width: 145px;
+}
+
+.appointments-table th:nth-child(5),
+.appointments-table td:nth-child(5) {
+  width: 180px;
+}
+
+.appointments-table th:nth-child(6),
+.appointments-table td:nth-child(6) {
+  width: 160px;
+}
+
+.appointments-table th:nth-child(7),
+.appointments-table td:nth-child(7) {
+  width: 135px;
+}
+
+.appointments-table th:nth-child(8),
+.appointments-table td:nth-child(8) {
+  width: 110px;
+  text-align: right;
+}
+
+.table-action-cell {
+  text-align: right;
+}
+
+/* BUTTON LINK */
+
+.btn-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 86px;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--primary);
+  background: transparent;
+  color: var(--primary-dark);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-link:hover {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+/* STATUS BADGES */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 110px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.status-pending {
+  background: #fff4da;
+  color: #b77b13;
+}
+
+.status-confirmed {
+  background: #e8f8ed;
+  color: #21874a;
+}
+
+.status-completed {
+  background: #e8f1ff;
+  color: #2f65c7;
+}
+
+.status-cancelled,
+.status-canceled {
+  background: #ffe8e8;
+  color: #cb3f3f;
+}
+
+/* OLD DETAIL CARD */
+/* Якщо старий aside десь випадково залишиться, він не буде ламати ширину. */
+
+.appointment-detail-card {
+  display: none;
+}
+
+/* MODAL */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(8, 37, 61, 0.46);
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  width: min(620px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  border-radius: 30px;
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  box-shadow: 0 24px 80px rgba(8, 37, 61, 0.24);
+  padding: 30px;
+}
+
+.appointment-details-modal {
+  width: min(860px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.modal-header h2,
+.modal-content h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 32px;
+  line-height: 1.1;
+  font-weight: 900;
+}
+
+.modal-header p {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+.modal-close-btn {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 16px;
+  border: 1px solid var(--border-light);
+  background: #ffffff;
+  color: var(--text-primary);
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.modal-close-btn:hover {
+  background: #f4fbfb;
+  border-color: var(--primary);
+  color: var(--primary-dark);
+}
+
+/* MODAL DETAILS */
+
+.appointment-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.detail-item {
+  padding: 16px;
+  border-radius: 18px;
+  background: #f8fcfd;
+  border: 1px solid #e3edf2;
+}
+
+.detail-item span,
+.detail-note span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.detail-item strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 900;
+  word-break: break-word;
+}
+
+.detail-note {
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 18px;
+  background: #f8fcfd;
+  border: 1px solid #e3edf2;
+}
+
+.detail-note h3 {
+  margin: 0 0 14px;
+  color: var(--text-primary);
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.detail-note p {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.detail-note textarea,
+.detail-note input {
+  width: 100%;
+}
+
+.detail-note textarea {
+  min-height: 110px;
+  margin: 8px 0 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid #d7e4ea;
+  background: #ffffff;
+  color: var(--text-primary);
+  font-size: 15px;
+  line-height: 1.5;
+  resize: vertical;
+  outline: none;
+}
+
+.detail-note input {
+  min-height: 46px;
+  margin: 8px 0 12px;
+  padding: 0 16px;
+  border-radius: 16px;
+  border: 1px solid #d7e4ea;
+  background: #ffffff;
+  color: var(--text-primary);
+  font-size: 15px;
+  outline: none;
+}
+
+.detail-note textarea:focus,
+.detail-note input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(47, 181, 177, 0.12);
+}
+
+/* MODAL ACTIONS */
+
+.modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.appointment-modal-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.appointment-modal-actions button,
+.modal-actions button {
+  min-height: 46px;
+}
+
+/* OLD CLASSES - щоб не ламали інші місця */
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #edf2f4;
+}
+
+.info-label {
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+.info-value {
+  text-align: right;
+  font-weight: 700;
+  color: var(--text-primary);
+  word-break: break-word;
+  max-width: 65%;
+}
+
+.status-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.status-actions button {
+  flex: 1;
+  min-width: 120px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 700;
+}
+
+.form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+  .appointments-table {
+    min-width: 980px;
+  }
+}
+
+@media (max-width: 760px) {
+  .records-header {
+    flex-direction: column;
+  }
+
+  .records-actions,
+  .specialist-appointment-filters {
+    flex-direction: column;
+  }
+
+  .records-actions input,
+  .records-actions select,
+  .specialist-appointment-filters input,
+  .specialist-appointment-filters select {
+    width: 100%;
+  }
+
+  .appointment-details-grid,
+  .appointment-modal-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-content {
+    padding: 22px;
+    border-radius: 24px;
+  }
+
+  .modal-header h2,
+  .modal-content h2 {
+    font-size: 26px;
+  }
+
+  .appointments-table {
+    min-width: 920px;
+  }
+}

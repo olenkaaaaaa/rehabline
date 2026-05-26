@@ -1,0 +1,13 @@
+.registrar-dashboard {
+  width: 100%;
+}
+
+.pro-dashboard-registrar {
+  --role-accent: #4f8cff;
+}
+
+.registrar-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}

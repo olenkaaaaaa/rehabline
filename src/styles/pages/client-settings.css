@@ -1,0 +1,137 @@
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.settings-section {
+  padding: 28px;
+  border-radius: var(--radius-xl);
+  background: white;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-section h2 {
+  margin-bottom: 22px;
+}
+
+.language-selector {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.lang-option {
+  min-width: 160px;
+  height: 48px;
+  border-radius: 16px;
+  border: 1px solid var(--border-light);
+  background: white;
+  font-weight: 700;
+  transition: var(--transition);
+}
+
+.lang-option:hover {
+  border-color: var(--primary);
+}
+
+.lang-option.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  box-shadow: 0 10px 24px rgba(72, 209, 204, 0.28);
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-weight: 600;
+}
+
+.checkbox-group input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+}
+
+.reminder-times {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #edf2f4;
+}
+
+.info-label {
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+.info-value {
+  text-align: right;
+  font-weight: 700;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+.hint {
+  margin-top: 18px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.settings-form > .btn-primary {
+  align-self: flex-start;
+  min-width: 220px;
+}
+
+@media (max-width: 760px) {
+  .settings-section {
+    padding: 22px;
+  }
+
+  .language-selector {
+    flex-direction: column;
+  }
+
+  .lang-option {
+    width: 100%;
+  }
+
+  .reminder-times {
+    grid-template-columns: 1fr;
+  }
+
+  .info-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .info-value {
+    text-align: left;
+  }
+
+  .settings-form > .btn-primary {
+    width: 100%;
+  }
+}

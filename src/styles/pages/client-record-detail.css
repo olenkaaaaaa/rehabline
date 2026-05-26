@@ -1,0 +1,164 @@
+.record-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.record-card {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 30px;
+  border-radius: var(--radius-xl);
+  background: white;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.record-status {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.record-info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #edf2f4;
+}
+
+.info-label {
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+.info-value {
+  text-align: right;
+  font-weight: 700;
+  color: var(--text-primary);
+  max-width: 65%;
+  word-break: break-word;
+}
+
+.specialist-notes {
+  align-items: flex-start;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.status-pending {
+  background: #fff4da;
+  color: #b77b13;
+}
+
+.status-confirmed {
+  background: #e8f8ed;
+  color: #21874a;
+}
+
+.status-completed {
+  background: #e8f1ff;
+  color: #2f65c7;
+}
+
+.status-cancelled {
+  background: #ffe8e8;
+  color: #cb3f3f;
+}
+
+.prescriptions-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.prescriptions-section h3 {
+  margin-bottom: 4px;
+}
+
+.prescription-mini {
+  padding: 22px;
+  border-radius: 20px;
+  background: #f8fcfc;
+  border: 1px solid #e6f0f2;
+}
+
+.prescription-mini h4 {
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.prescription-mini p {
+  margin-bottom: 14px;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+.record-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.record-actions a,
+.record-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-link {
+  color: var(--primary-dark);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  color: var(--primary);
+}
+
+@media (max-width: 760px) {
+  .record-card {
+    padding: 22px;
+  }
+
+  .info-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .info-value {
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .record-status {
+    justify-content: flex-start;
+  }
+
+  .record-actions {
+    flex-direction: column;
+  }
+
+  .record-actions button,
+  .record-actions a {
+    width: 100%;
+  }
+}
