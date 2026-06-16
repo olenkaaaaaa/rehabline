@@ -105,12 +105,6 @@ src/
 
 ## Встановлення та запуск
 
-### Клонування репозиторію
-
-```bash
-git clone https://github.com/username/rehabline.git
-```
-
 ### Перехід до каталогу проєкту
 
 ```bash
