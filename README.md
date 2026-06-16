@@ -1,70 +1,192 @@
-# Getting Started with Create React App
+# RehabLine
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Опис проєкту
 
-## Available Scripts
+**RehabLine** — це вебзастосунок для онлайн-запису клієнтів на медичні та реабілітаційні послуги. Система забезпечує зручний пошук спеціалістів, перегляд доступних послуг і локацій, а також керування записами через спеціалізовані кабінети користувачів.
 
-In the project directory, you can run:
+Проєкт розроблено в межах кваліфікаційної роботи бакалавра за напрямом підготовки «Комп’ютерні науки».
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Основні можливості
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Для клієнтів
 
-### `npm test`
+* реєстрація та авторизація;
+* перегляд переліку послуг;
+* перегляд інформації про спеціалістів;
+* перегляд доступних локацій;
+* створення запису на прийом;
+* перегляд власних записів;
+* скасування або зміна запису;
+* отримання повідомлень про статус запису.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Для спеціалістів
 
-### `npm run build`
+* перегляд графіка роботи;
+* керування доступними часовими слотами;
+* перегляд записів клієнтів;
+* ведення рекомендацій та нотаток;
+* перегляд історії прийомів клієнтів;
+* редагування власного профілю.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Для реєстраторів
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* створення записів від імені клієнтів;
+* підтвердження та редагування записів;
+* керування розкладом спеціалістів;
+* перегляд усіх записів системи;
+* робота з клієнтською базою.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Для адміністраторів
 
-### `npm run eject`
+* керування користувачами;
+* керування послугами;
+* керування спеціалістами;
+* керування локаціями;
+* налаштування правил запису;
+* контроль роботи системи.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Використані технології
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Frontend
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+* React
+* React Router
+* Context API
+* CSS3
 
-## Learn More
+### Backend
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+* Supabase
+* PostgreSQL
+* Row Level Security (RLS)
+* Supabase Storage
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Інструменти розробки
 
-### Code Splitting
+* Visual Studio Code
+* Git
+* GitHub
+* Figma
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+## Архітектура системи
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Застосунок реалізовано за клієнт-серверною архітектурою.
 
-### Making a Progressive Web App
+Frontend відповідає за відображення інтерфейсу та взаємодію з користувачем, тоді як Supabase забезпечує:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+* зберігання даних;
+* автентифікацію користувачів;
+* керування доступом;
+* роботу з файлами;
+* виконання SQL-функцій та запитів.
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Структура проєкту
 
-### Deployment
+```text
+src/
+├── components/          # Повторно використовувані компоненти
+├── contexts/            # Контексти React
+├── pages/               # Сторінки застосунку
+│   ├── BookingWizard/
+│   ├── ClientDashboard/
+│   ├── SpecialistDashboard/
+│   ├── RegistrarDashboard/
+│   └── AdminDashboard/
+├── services/            # Робота з API
+├── utils/               # Допоміжні функції
+└── assets/              # Статичні ресурси
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+## Встановлення та запуск
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Клонування репозиторію
+
+```bash
+git clone https://github.com/username/rehabline.git
+```
+
+### Перехід до каталогу проєкту
+
+```bash
+cd rehabline
+```
+
+### Встановлення залежностей
+
+```bash
+npm install
+```
+
+### Налаштування змінних середовища
+
+Створіть файл `.env`:
+
+```env
+REACT_APP_SUPABASE_URL=your_supabase_url
+REACT_APP_SUPABASE_ANON_KEY=your_supabase_key
+```
+
+### Запуск застосунку
+
+```bash
+npm start
+```
+
+Після запуску застосунок буде доступний за адресою:
+
+```text
+http://localhost:3000
+```
+
+---
+
+## Основні ролі користувачів
+
+| Роль          | Опис                           |
+| ------------- | ------------------------------ |
+| Клієнт        | Створює та переглядає записи   |
+| Спеціаліст    | Працює з графіком та клієнтами |
+| Реєстратор    | Керує записами та розкладом    |
+| Адміністратор | Керує всією системою           |
+
+---
+
+## Безпека
+
+У системі реалізовано:
+
+* автентифікацію користувачів через Supabase Auth;
+* рольову модель доступу;
+* політики Row Level Security;
+* захист персональних даних користувачів.
+
+---
+
+## Майбутні покращення
+
+* email-нагадування про записи;
+* SMS-сповіщення;
+* інтеграція з Google Calendar;
+* онлайн-консультації;
+* мобільна версія застосунку;
+* аналітика завантаженості спеціалістів.
+
+---
+
+## Автор
+
+Бурдяк Олена Павлівна
+
+Кваліфікаційна робота бакалавра
+
+2026 рік
