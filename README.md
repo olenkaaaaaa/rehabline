@@ -65,7 +65,6 @@
 ### Інструменти розробки
 
 * Visual Studio Code
-* Git
 * GitHub
 * Figma
 
